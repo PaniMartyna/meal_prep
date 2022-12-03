@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'debug_toolbar',
+
+    # my apps
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -85,12 +88,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': {}
 }
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+db_from_env = dj_database_url.config(
+    default=DATABASE_URL, conn_max_age=500, ssl_require=False
+)
+
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -151,6 +158,6 @@ INTERNAL_IPS = {
     '127.0.0.1',
 }
 
-# AUTH_USER_MODEL = ''
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # LOGIN_REDIRECT_URL = ''
