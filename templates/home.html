@@ -5,5 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    Łatwy Meal Prep!
+    <h1>Łatwy Meal Prep!</h1>
+    {% if user.is_authenticated %}
+        <p>Cześć {{ user.username }}!</p>
+    {% else %}
+        <p>Zaloguj się raz, dwa!</p>
+        <a href="{% url 'login' %}">KLIK!</a>
+    {% endif %}
 {% endblock %}

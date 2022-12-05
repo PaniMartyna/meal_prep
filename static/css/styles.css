@@ -1,0 +1,19 @@
+.btn-aubergine {
+    color: #fff;
+    background-color: #800080ff;
+    border-color:#800080ff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #73b973;
+    --bs-btn-hover-border-color: #73b973;
+    --bs-btn-active-color:#fff;
+    --bs-btn-active-bg:#800080ff;
+    --bs-btn-active-border-color:#800080ff;
+    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #6a6d6e;
+    --bs-btn-disabled-border-color:#6a6d6e;
+}
+
+.bg-aubergine {
+    background-color: rgba(128, 0, 128, 1);
+}
