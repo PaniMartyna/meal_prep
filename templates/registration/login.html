@@ -9,6 +9,7 @@
     <form method="post">
       {% csrf_token %}
       {{ form | crispy }}
+    <input type="hidden" name="next" value="{{ request.GET.next }}"/>
     <button type="submit" class="btn btn-info btn-aubergine">Zaloguj się</button>
     </form>
 {% endblock %}

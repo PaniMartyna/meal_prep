@@ -1,0 +1,18 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    przepisy
+{% endblock %}
+
+{% block content %}
+
+    <h1>twoja książka kucharska</h1><br><br>
+    <ul class="list-group list-group-flush">
+      {% for recipe in recipes %}
+        <a href="{% url 'recipes:show-recipe' idx=recipe.id %}" class="list-group-item list-group-item-action">{{ recipe.name }}</a>
+      {% empty %}
+        <p>twoja książka jest pusta</p>
+      {% endfor %}
+    </ul><br><br>
+    <p><a href="{% url 'recipes:add-recipe' %}" class="btn btn-info btn-aubergine">dodaj nowy przepis</a></p>
+{% endblock %}

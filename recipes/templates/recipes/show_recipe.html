@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    Przepis
+{% endblock %}
+
+{% block content %}
+    <div class="row text-start">
+    <h3>{{ name }} <span class="badge text-bg-warning">porcje: {{ portions }}</span></h3>
+    </div><br><br>
+    <div class="row">
+        <div class="col text-start">
+            <h5>SKŁADNIKI</h5>
+            <ul>
+            {% for ingredient in ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col text-start">
+            <h5>PRZYGOTOWANIE</h5>
+            <ol>
+            {% for step in method %}
+                <li>{{ step }}</li>
+            {% endfor %}
+            </ol>
+        </div>
+
+    </div>
+
+{% endblock %}

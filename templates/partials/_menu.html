@@ -11,6 +11,12 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">wyloguj {{ user.fullname }}</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'recipes:recipe-list' %}">książka kucharska</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'recipes:add-recipe' %}">dodaj przepis</a>
+          </li>
         {% else %}
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'users:signup' %}">zarejestruj</a>

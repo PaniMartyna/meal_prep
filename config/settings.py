@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # my apps
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
+    'recipes.apps.RecipesConfig'
 ]
 
 MIDDLEWARE = [
@@ -161,5 +162,5 @@ INTERNAL_IPS = {
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-LOGIN_REDIRECT_URL = 'pages:home'
-LOGOUT_REDIRECT_URL = 'pages:home'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
