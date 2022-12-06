@@ -1,10 +1,10 @@
-from django.urls import reverse, resolve
+from django.urls import resolve
 from pytest_django.asserts import assertTemplateUsed
 
 from pages.views import HomePageView
 
 
-def test_url_exists_at_correct_location(homepage):
+def test_homepage_url_exists_at_correct_location(homepage):
     assert homepage.status_code == 200
 
 
