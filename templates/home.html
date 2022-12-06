@@ -1,15 +1,19 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %}
     Hello!
 {% endblock %}
 
+
 {% block content %}
     <h1>Łatwy Meal Prep!</h1>
+
     {% if user.is_authenticated %}
         <p>Cześć {{ user.username }}!</p>
     {% else %}
-        <p>Zaloguj się raz, dwa!</p>
-        <a href="{% url 'login' %}">KLIK!</a>
+        <p>Zaloguj się raz, dwa! >>
+        <a href="{% url 'login' %}">KLIK!</a></p>
     {% endif %}
+    <img class="bg-image-aubergine" src="{% static 'images/aubergines_background.jpg' %}">
 {% endblock %}
