@@ -77,3 +77,6 @@ class RecipeListView(LoginRequiredMixin, ListView):
     template_name = 'recipes/recipes_list.html'
     model = Recipe
     context_object_name = 'recipes'
+
+    def get_queryset(self):
+        return Recipe.objects.filter(added_by=self.request.user).order_by('-date_added')
