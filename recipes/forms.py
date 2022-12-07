@@ -1,25 +1,75 @@
+from crispy_forms.helper import FormHelper
 from django import forms
 
-from recipes.models import Recipe
+from crispy_forms.layout import Layout, Row, Column, Submit
+from crispy_forms.bootstrap import InlineCheckboxes
+from django.core.exceptions import ValidationError
+
+from recipes.models import Recipe, MealTag
+
+
+def validate_recipe_exists(value):
+    """checks if recipe under given name already exists"""
+    recipe = Recipe.objects.filter(name=value)
+    if recipe:  # check if any object exists
+        raise ValidationError('taki przepis już istnieje w Twojej książce kucharskiej. Podaj inna nazwę')
 
 
 class RecipeAddForm(forms.ModelForm):
-    name = forms.CharField(label="", widget=forms.TextInput(attrs={
-        'placeholder': 'nazwa dania',
-        'autofocus': 'autofocus'
-    }))
-    portions = forms.IntegerField(label="", widget=forms.NumberInput(attrs={
-        'placeholder': 'liczba porcji',
-        'min': 1,
-        'step': 0.5,
-    }))
-    ingredients = forms.CharField(label="", widget=forms.Textarea(attrs={
-        'placeholder': 'składniki'
-    }))
-    method = forms.CharField(label="", widget=forms.Textarea(attrs={
-        'placeholder': 'opis przygotowania'
-    }))
+
+    meal_tag_list = MealTag.objects.all()
+    MEAL_TAGS = [(str(tag.id), tag.meal_tag) for tag in meal_tag_list]
+
+    name = forms.CharField(label="",
+                           widget=forms.TextInput(attrs={
+                                'placeholder': 'nazwa dania',
+                                'autofocus': 'autofocus'
+                                }),
+                           validators=[validate_recipe_exists])
+
+    portions = forms.IntegerField(label="",
+                                  widget=forms.NumberInput(attrs={
+                                    'placeholder': 'liczba porcji',
+                                    'min': 1,
+                                    'step': 0.5,
+                                     }))
+
+    ingredients = forms.CharField(label="",
+                                  widget=forms.Textarea(attrs={
+                                    'placeholder': 'składniki'
+                                    }))
+
+    method = forms.CharField(label="",
+                             required=False,
+                             widget=forms.Textarea(attrs={
+                                'placeholder': 'opis przygotowania',
+                                }))
+
+    meal_tags = forms.MultipleChoiceField(choices=MEAL_TAGS,
+                                          label="",
+                                          widget=forms.CheckboxSelectMultiple(),
+                                          required=True,
+                                          error_messages={
+                                              'required': 'wybierz przynajmniej jedną kategorię dla tego przepisu'
+                                          })
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('name', css_class='form-group col-md-6 mb-0'),
+                Column('portions', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            InlineCheckboxes('meal_tags'),
+            'ingredients',
+            'method',
+            Submit('submit', 'zapisz', css_class='btn btn-aubergine')
+            )
 
     class Meta:
         model = Recipe
-        fields = ['name', 'portions', 'ingredients', 'method']
+        fields = ['name', 'portions', 'ingredients', 'method', 'meal_tags']
+
+

@@ -6,9 +6,5 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-    <button type="submit" class="btn btn-aubergine">zapisz</button>
-    </form>
+    {% crispy form %}
 {% endblock %}

@@ -6,8 +6,13 @@
 
 {% block content %}
     <div class="row text-start">
-    <h3>{{ name }} <span class="badge text-bg-warning">porcje: {{ portions }}</span></h3>
-    </div><br><br>
+        <h1>{{ name }}</h1>
+        <h5>{% for tag in meal_tags %}
+            <span class="badge text-bg-warning">{{ tag }}</span>
+        {% endfor %}
+        </h5>
+    <p>porcje: {{ portions }}</p>
+    </div><br>
     <div class="row">
         <div class="col text-start">
             <h5>SKŁADNIKI</h5>

@@ -2,12 +2,13 @@ import json
 
 from django import views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
 from . import forms
-from .models import Recipe
+from .models import Recipe, MealTag
 
 
 # class RecipeAddView(LoginRequiredMixin, CreateView):
@@ -39,9 +40,15 @@ class RecipeAddView(LoginRequiredMixin, views.View):
                 method=method,
                 ingredients=ingredients,
                 added_by_id=user.id)
-            recipe.save()
+
+            meal_tags = form.cleaned_data['meal_tags']
+            for tag in meal_tags:
+                meal_tag = MealTag.objects.get(pk=tag)
+                meal_tag.recipes.add(recipe)
 
             return redirect(reverse_lazy('recipes:show-recipe', args=[recipe.id]))
+        else:
+            return render(request, 'recipes/add_recipe.html', {'form': form})
 
     def get(self, request):
         form = forms.RecipeAddForm()
@@ -53,11 +60,14 @@ class RecipeShowView(LoginRequiredMixin, views.View):
 
     def get(self, request, idx):
         recipe = Recipe.objects.get(pk=idx)
+        meal_tags = recipe.meal_tags.all()
+
         return render(request, 'recipes/show_recipe.html', {
                 'name': recipe.name,
                 'portions': recipe.portions,
                 'ingredients': json.loads(recipe.ingredients),
                 'method': json.loads(recipe.method),
+                'meal_tags': meal_tags,
             })
 
 
