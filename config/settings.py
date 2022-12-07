@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     # my apps
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
-    'recipes.apps.RecipesConfig'
+    'recipes.apps.RecipesConfig',
+    'plans.apps.PlansConfig',
 ]
 
 MIDDLEWARE = [
