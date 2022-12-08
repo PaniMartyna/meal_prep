@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # my apps
     'users.apps.UsersConfig',
+    'preferences.apps.PreferencesConfig',
     'pages.apps.PagesConfig',
     'recipes.apps.RecipesConfig',
     'plans.apps.PlansConfig',
