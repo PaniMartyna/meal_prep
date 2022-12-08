@@ -1,0 +1,34 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    {{ meal.meal_name }} - {{ day }}
+{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+    <h1>{{ meal.meal_name }}</h1>
+        <span style="color:grey;">
+            <strong>{{ meal_date|date:'l' }}</strong> {{ meal_date|date:'d E' }}</span>
+    </div>
+    {% if recipe_list %}
+    <form method="post">
+    {% csrf_token %}
+
+        <ul class="list-group list-group-flush">
+            {% for recipe in recipe_list %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                <label>
+                    <input type="checkbox" value="{{ recipe.id }}" name="recipes"> {{ recipe.name }}
+                </label>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit" class="btn btn-aubergine">zapisz</button>
+    </form>
+
+    {% else %}
+        Dodaj przepisy do swojej książki kucharskiej, żeby móc planować posiłki<br>
+        <a href="{% url 'recipes:add-recipe' %}" class="btn btn-aubergine">dodaj przepis</a>
+
+    {% endif %}
+{% endblock %}
