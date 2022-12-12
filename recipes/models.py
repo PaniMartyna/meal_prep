@@ -4,7 +4,7 @@ from users.models import CustomUser
 
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     portions = models.IntegerField()
     method = models.TextField(blank=True)
     ingredients = models.TextField()

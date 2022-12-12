@@ -14,6 +14,9 @@ class DayPlan(models.Model):
     is_eaten = models.BooleanField()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ['date', 'meal', 'recipe']
+
     def __str__(self):
         return f'plan użytkownika {self.user.username} ' \
                f'na dzień {self.date}.' \

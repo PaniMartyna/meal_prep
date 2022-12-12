@@ -29,7 +29,11 @@
                                         <a class="list-group-item-action" style="text-decoration: none;"
                                            href="{% url 'recipes:show-recipe' idx=item.recipe.id %}">
                                             {{ item.recipe.name }}
-                                        </a></span> &#11015; &#128465;
+                                        </a></span>
+                                        <span>
+                                        <a href="#" style="text-decoration: none;">&#11015;</a>
+                                        <a href="{% url 'plans:plan-recipe-delete' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#128465;</a>
+                                        </span>
                                         </li>
                                     {% endif %}
                                 {% endfor %}

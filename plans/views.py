@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
+from django.views.generic import DeleteView
 
 from plans.models import DayPlan
 from preferences.models import MealSetting
@@ -32,7 +33,6 @@ class WeekPlanNavView(views.View):
         })
 
 
-
 class WeekPlanView(views.View):
 
     def get(self, request, week_start):
@@ -56,6 +56,16 @@ class WeekPlanView(views.View):
             'day_meal_plan': day_meal_plan,
 
         })
+
+
+class RecipeDeleteView(views.View):
+
+    def get(self, request, week_start, day, meal_id, recipe_id):
+        meal_date = datetime.strptime(day, '%Y-%m-%d').date()
+        recipe_to_delete = DayPlan.objects.get(date=meal_date, meal_id=meal_id, recipe_id=recipe_id)
+        print(recipe_to_delete)
+        recipe_to_delete.delete()
+        return redirect('plans:week-plan', week_start=week_start)
 
 
 class PlanDetailView(views.View):
