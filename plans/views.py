@@ -59,7 +59,7 @@ class WeekPlanView(views.View):
         })
 
 
-class RecipeDeleteView(views.View):
+class PlanRecipeDeleteView(views.View):
 
     def get(self, request, week_start, day, meal_id, recipe_id):
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
@@ -68,7 +68,7 @@ class RecipeDeleteView(views.View):
         return redirect('plans:week-plan', week_start=week_start)
 
 
-class RecipePropagateView(views.View):
+class PlanRecipePropagateView(views.View):
 
     def get(self, request, week_start, day, meal_id, recipe_id):
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
@@ -112,3 +112,53 @@ class PlanDetailView(views.View):
             DayPlan.objects.create(date=meal_date, meal=meal, recipe=recipe, is_eaten=True, user=request.user)
 
         return redirect(reverse('plans:week-plan', args=[week_start]))
+
+def get_recipes_for_the_week(week_start):
+    base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
+    day_list_7 = [base + timedelta(days=2) + timedelta(days=x) for x in range(7)]
+    day_list_9 = [base + timedelta(days=x) for x in range(9)]
+    """get all recipes for the week"""
+    plans_list = DayPlan.objects.filter(date__in=day_list_7).order_by('recipe__name')
+    recipe_list = {}
+    for plan in plans_list:
+        if plan.recipe not in recipe_list.keys():
+            recipe_list[plan.recipe] = []
+        recipe_list[plan.recipe].append(plan.date)
+    return day_list_9, plans_list, recipe_list
+
+class WeekPlanSummaryView(views.View):
+
+    def get(self, request, week_start):
+        day_list_9, plans_list, recipe_list = get_recipes_for_the_week(week_start)
+        return render(request, 'plans/week_plan_summary.html', {
+            'day_list_9': day_list_9,
+            'recipe_list': recipe_list,
+            'plans_list': plans_list,
+        })
+
+    def post(self, request, week_start):
+        day_list_9, plans_list, recipe_list = get_recipes_for_the_week(week_start)
+        for recipe, dates in recipe_list.items():
+            cooking_date = datetime.strptime(request.POST.get(f'{recipe.id}_cooked'), '%Y-%m-%d').date()
+            cooking_portions = request.POST.get(f'{recipe.id}_portions')
+            if cooking_date in dates:
+                plan_to_update = DayPlan.objects.get(date=cooking_date, recipe=recipe, user=request.user)
+                plan_to_update.is_cooked = True
+                plan_to_update.portions_cooked = cooking_portions
+                plan_to_update.save()
+            else:
+                DayPlan.objects.create(
+                    date=cooking_date,
+                    recipe=recipe,
+                    is_cooked=True,
+                    portions_cooked=cooking_portions,
+                    is_eaten=False,
+                    user=request.user)
+
+        return redirect(reverse('plans:week_cook_summary', args=[week_start]))
+
+
+class WeekCookSummaryView(views.View):
+    pass
+
+

@@ -44,6 +44,18 @@
   display: block;
 }
 
+.btn-multichoice-sm label {
+  float: left; line-height: 1.5em;
+  width: 4.0em; height: 2.0em;
+}
+
+.btn-multichoice-sm label span {
+  text-align: center;
+  vertical-align: top;
+  padding: 3px;
+  display: block;
+}
+
 .btn-multichoice label input {
   position: absolute;
   display: none;
@@ -64,7 +76,6 @@ This following statements selects each category individually that contains an in
 */
 
 .btn-multichoice input:checked + span{background-color: #800080ff;}
-
 
 
 .card-aubergine-link {

@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    planowanie tygodnia
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-5">
+<h3>Dokończ planowanie podejmując kolejne decyzje:</h3>
+<ol>
+    <li>dla każdego dania wpisz liczbę porcji, której potrzebujesz w całym tygodniu</li>
+    <li>dla każdego dania zaznacz, kiedy planujesz go ugotować</li>
+    <li>zaznacz, w które dni wybierzesz się na zakupy</li>
+</ol>
+</div>
+
+<form method="post">
+{% csrf_token %}
+
+<table class="table">
+  <thead class="table-warning" style="text-align: center;">
+    <tr>
+      <th scope="col"> </th>
+      {% for day in day_list_9 %}
+      <th scope="col" style="font-weight: normal;">{{ day|date:'d.m' }}</th>
+      {% endfor %}
+      <th scope="col">porcje</th>
+      <th scope="col">gotowanie</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for recipe, dates in recipe_list.items %}
+    <tr>
+      <th scope="row" style="text-align: right;">{{ recipe }}</th>
+      {% for day in day_list_9 %}
+          {% if day in dates %}
+              <td style="text-align: center;">&#129000;</td>
+          {% else %}
+              <td></td>
+          {% endif %}
+      {% endfor %}
+      <td style="text-align: center;">
+          <label>
+              <input name="{{ recipe.id }}_portions" type="number" min="1" max="15" step="0.5" style="width: 50px;">
+          </label>
+          </td>
+      <td style="text-align: center;">
+          <label>
+              <input name="{{ recipe.id }}_cooked" type="date">
+          </label>
+      </td>
+    </tr>
+  {% endfor %}
+  <tr>
+      <th></th>
+
+      {% for day in day_list_9 %}
+      <td>
+        <div class="btn-multichoice btn-multichoice-sm" style="width: fit-content">
+           <label>
+              <input type="checkbox" value="{{ choice_id }}" name="meal_name"><span>shop</span>
+           </label>
+        </div>
+
+      {% endfor %}
+  </tr>
+  </tbody>
+</table>
+
+    <div class="row mt-5"><button type="submit" class="btn btn-aubergine">zapisz</button></div>
+</form>
+{% endblock %}
+
