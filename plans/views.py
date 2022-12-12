@@ -92,8 +92,9 @@ class PlanDetailView(views.View):
         already_chosen_recipes_ids = []
         for recipe in already_chosen_recipes:
             already_chosen_recipes_ids.append(recipe.recipe_id)
-        recipe_list = Recipe.objects.all()
-        recipe_list.exclude(pk__in=already_chosen_recipes_ids)
+        print(already_chosen_recipes_ids)
+        recipe_list = Recipe.objects.all().filter(added_by=request.user).exclude(pk__in=already_chosen_recipes_ids)
+        print(recipe_list)
         return render(request, 'plans/plan_detail.html', {
             'meal_date': meal_date,
             'meal': meal,
