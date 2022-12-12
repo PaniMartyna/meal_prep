@@ -73,7 +73,11 @@ class PlanDetailView(views.View):
     def get(self, request, week_start, day, meal_id):
         meal = MealSetting.objects.get(id=meal_id)
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
-        recipe_list = Recipe.objects.all()
+        already_chosen_recipes = DayPlan.objects.filter(date=meal_date, meal_id=meal_id)
+        already_chosen_recipes_ids = []
+        for recipe in already_chosen_recipes:
+            already_chosen_recipes_ids.append(recipe.recipe_id)
+        recipe_list = Recipe.objects.all().exclude(pk__in=already_chosen_recipes_ids)
         return render(request, 'plans/plan_detail.html', {
             'meal_date': meal_date,
             'meal': meal,
