@@ -7,13 +7,38 @@
 
 
 {% block content %}
-    <h1>Łatwy Meal Prep!</h1>
+    <h1>łatwy meal prep!</h1>
 
     {% if user.is_authenticated %}
-        <p>Cześć {{ user.username }}!</p>
+        <p class="mb-5">cześć {{ user.username }}!</p>
+
+        <h3 class="mt-5">dzisiejsze menu:</h3>
+        <ul class="list-group list-group-flush">
+
+        {% for meal in planned_meals %}
+
+            <li class="list-group-item"><strong>{{ meal.meal_name }}: </strong>
+              {% for item in eaten_list %}
+              {% if item.meal == meal %}
+              {{ item.recipe }},
+              {% endif %}
+              {% endfor %}</li>
+
+        {% endfor %}
+        </ul>
+
+        <h3 class="mt-5">dzisiaj gotujesz:</h3>
+        <ul class="list-group list-group-flush">
+            {% for item in cooked_list %}
+             <li class="list-group-item"><a href="{% url 'recipes:show-recipe' idx=item.recipe_id %}" style="color: #404040; text-decoration: none">
+                 {{ item.recipe }}
+             </a></li>
+            {% endfor %}
+        </ul>
+
     {% else %}
         <p>Zaloguj się raz, dwa! >>
         <a href="{% url 'login' %}">KLIK!</a></p>
     {% endif %}
-    <img class="bg-image-aubergine" src="{% static 'images/aubergines_background.jpg' %}">
+
 {% endblock %}
