@@ -11,21 +11,25 @@
 
     <li class="list-group-item mb-4">
         <div>
-        <div class="mb-4"><strong>{{ day|date:'l' }}</strong> <span style="color:grey;">{{ day|date:'d E' }}</span></div>
+        <div style="background-color:yellow;" class="mb-4"><strong>{{ day|date:'l' }}</strong> <span style="color:grey;">{{ day|date:'d E' }}</span></div>
 
             <ul class="list-group list-group-flush">
                 {% for meal in meal_list %}
                     <li class="list-group-item d-flex justify-content-between align-items-start">
-                        {{ meal.meal_name }}
+                        <strong>{{ meal.meal_name }}</strong>
                     <span><a href="{% url 'plans:plan-detail' week_start=week_start day=day meal_id=meal.id %}" class="btn btn-aubergine">+</a></span>
                     </li>
-                        <div class="ms-2 me-auto">
-                        <ul>
+                        <div class="ms-4 me-5">
+                        <ul class="list-group list-group-flush">
                         {% for plan in day_meal_plan %}
                                 {% for item in plan %}
                                     {% if item.date == day and item.meal.meal_name == meal.meal_name %}
-                                        <li>
-                                        <span><a href="{% url 'recipes:show-recipe' idx=item.recipe.id %}">{{ item.recipe.name }}</a></span>
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <span>
+                                        <a class="list-group-item-action" style="text-decoration: none;"
+                                           href="{% url 'recipes:show-recipe' idx=item.recipe.id %}">
+                                            {{ item.recipe.name }}
+                                        </a></span> &#11015; &#128465;
                                         </li>
                                     {% endif %}
                                 {% endfor %}
@@ -33,7 +37,7 @@
                         {% endfor %}
                         </ul>
                         </div>
-
+                    <div class="mb-4"></div>
 
                 {% endfor %}
             </ul>

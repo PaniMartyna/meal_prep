@@ -11,6 +11,28 @@ from preferences.models import MealSetting
 from recipes.models import Recipe
 
 
+class WeekPlanNavView(views.View):
+
+    def get(self, request):
+        print(date.today())
+        current_week_start = date.today() + timedelta(days=0-date.today().weekday())
+        current_week_end = current_week_start + timedelta(days=7)
+        next_week_1_start = date.today() + timedelta(days=7-date.today().weekday())
+        next_week_1_end = next_week_1_start + timedelta(days=7)
+        next_week_2_start = date.today() + timedelta(days=14-date.today().weekday())
+        next_week_2_end = next_week_2_start + timedelta(days=7)
+
+        return render(request, 'plans/week_plan_nav.html', {
+            'current_week_start': current_week_start,
+            'current_week_end': current_week_end,
+            'next_week_1_start': next_week_1_start,
+            'next_week_1_end': next_week_1_end,
+            'next_week_2_start': next_week_2_start,
+            'next_week_2_end': next_week_2_end,
+        })
+
+
+
 class WeekPlanView(views.View):
 
     def get(self, request, week_start):

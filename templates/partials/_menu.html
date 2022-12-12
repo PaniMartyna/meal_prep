@@ -9,6 +9,9 @@
 
         {% if user.is_authenticated %}
           <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'plans:week-plan-nav' %}">planuj!</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'recipes:recipe-list' %}">książka kucharska</a>
           </li>
           <li class="nav-item">

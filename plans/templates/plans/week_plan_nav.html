@@ -1,0 +1,41 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    plans navigation
+{% endblock %}
+
+{% block content %}
+
+<div class="row row-cols-3 mt-5">
+  <div class="col">
+    <a class="card text-center card-aubergine-link-active" href="{% url 'plans:week-plan' week_start=current_week_start %}">
+      <div class="card-body">
+        <h5 class="card-title">aktualny tydzień</h5>
+        <p class="card-text">{{ current_week_start|date:'d E Y' }}</p>
+        <p class="card-text">*</p>
+        <p class="card-text">{{ current_week_end|date:'d E Y' }}</p>
+      </div>
+    </a>
+  </div>
+  <div class="col">
+    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=next_week_1_start %}">
+      <div class="card-body">
+        <h5 class="card-title">następny tydzień</h5>
+        <p class="card-text">{{ next_week_1_start|date:'d E Y' }}</p>
+        <p class="card-text">*</p>
+        <p class="card-text">{{ next_week_1_end|date:'d E Y' }}</p>
+      </div>
+    </a>
+  </div>
+  <div class="col">
+    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=next_week_2_start %}">
+      <div class="card-body">
+        <h5 class="card-title">za dwa tygodnie</h5>
+        <p class="card-text">{{ next_week_2_start|date:'d E Y' }}</p>
+        <p class="card-text">*</p>
+        <p class="card-text">{{ next_week_2_end|date:'d E Y' }}</p>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

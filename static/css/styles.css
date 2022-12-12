@@ -64,3 +64,28 @@ This following statements selects each category individually that contains an in
 */
 
 .btn-multichoice input:checked + span{background-color: #800080ff;}
+
+
+
+.card-aubergine-link {
+    width: 18rem;
+    text-decoration: none;
+    color: black;
+}
+
+
+.card-aubergine-link:hover {
+    color: grey;
+}
+
+
+.card-aubergine-link-active {
+    width: 18rem;
+    text-decoration: none;
+    background-color: #800080ff;
+    color: white;
+}
+
+.card-aubergine-link-active:hover {
+    color: yellow;
+}
