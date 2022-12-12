@@ -31,7 +31,7 @@
                                             {{ item.recipe.name }}
                                         </a></span>
                                         <span>
-                                        <a href="#" style="text-decoration: none;">&#11015;</a>
+                                        <a href="{% url 'plans:plan-recipe-propagate' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#11015;</a>
                                         <a href="{% url 'plans:plan-recipe-delete' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#128465;</a>
                                         </span>
                                         </li>

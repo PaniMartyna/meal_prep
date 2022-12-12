@@ -2,6 +2,7 @@ from datetime import date, timedelta, datetime
 
 from django import views
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -63,21 +64,36 @@ class RecipeDeleteView(views.View):
     def get(self, request, week_start, day, meal_id, recipe_id):
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
         recipe_to_delete = DayPlan.objects.get(date=meal_date, meal_id=meal_id, recipe_id=recipe_id)
-        print(recipe_to_delete)
         recipe_to_delete.delete()
         return redirect('plans:week-plan', week_start=week_start)
+
+
+class RecipePropagateView(views.View):
+
+    def get(self, request, week_start, day, meal_id, recipe_id):
+        meal_date = datetime.strptime(day, '%Y-%m-%d').date()
+        meal_date_next = meal_date + timedelta(days=1)
+        meal = MealSetting.objects.get(pk=meal_id)
+        recipe = Recipe.objects.get(pk=recipe_id)
+
+        try:
+            DayPlan.objects.create(date=meal_date_next, meal=meal, recipe=recipe, is_eaten=True, user=request.user)
+            return redirect('plans:week-plan', week_start=week_start)
+        except IntegrityError as e:
+            return HttpResponse(status=204)
 
 
 class PlanDetailView(views.View):
 
     def get(self, request, week_start, day, meal_id):
-        meal = MealSetting.objects.get(id=meal_id)
+        meal = MealSetting.objects.get(pk=meal_id)
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
         already_chosen_recipes = DayPlan.objects.filter(date=meal_date, meal_id=meal_id)
         already_chosen_recipes_ids = []
         for recipe in already_chosen_recipes:
             already_chosen_recipes_ids.append(recipe.recipe_id)
-        recipe_list = Recipe.objects.all().exclude(pk__in=already_chosen_recipes_ids)
+        recipe_list = Recipe.objects.all()
+        recipe_list.exclude(pk__in=already_chosen_recipes_ids)
         return render(request, 'plans/plan_detail.html', {
             'meal_date': meal_date,
             'meal': meal,
