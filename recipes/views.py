@@ -11,17 +11,6 @@ from . import forms
 from .models import Recipe, MealTag
 
 
-# class RecipeAddView(LoginRequiredMixin, CreateView):
-#     model = models.Recipe
-#     fields = ['name', 'portions', 'method']
-#     template_name = 'recipes/add_recipe.html'
-#     success_url = reverse_lazy('home')
-#     login_url = reverse_lazy('login')
-#
-#     def form_valid(self, form):
-#         form.instance.added_by = self.request.user
-#         return super().form_valid(form)
-
 class RecipeAddView(LoginRequiredMixin, views.View):
     login_url = reverse_lazy('login')
 
@@ -80,3 +69,11 @@ class RecipeListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(added_by=self.request.user).order_by('-date_added')
+
+
+class RecipeDeleteView(views.View):
+
+    def get(self, request, idx):
+        recipe_to_delete = Recipe.objects.get(pk=idx)
+        recipe_to_delete.delete()
+        return redirect('recipes:recipe-list')
