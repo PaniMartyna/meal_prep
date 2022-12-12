@@ -13,5 +13,5 @@ urlpatterns = [
     path('propagate_recipe/<str:week_start>/<str:day>/<int:meal_id>/<int:recipe_id>/',
          views.PlanRecipePropagateView.as_view(), name='plan-recipe-propagate'),
     path('week_plan_summary/<str:week_start>/', views.WeekPlanSummaryView.as_view(), name='week-plan-summary'),
-    path('week_cook_summary/<str:week_start>/', views.WeekCookSummaryView.as_view(), name='week-cookn-summary'),
+    path('week_cook_summary/<str:week_start>/', views.WeekCookSummaryView.as_view(), name='week-cook-summary'),
 ]

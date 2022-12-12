@@ -1,0 +1,39 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    plan gotowania
+{% endblock %}
+
+{% block content %}
+
+<ul class="list-group list-group-flush">
+{% for day in day_list %}
+
+    <li class="list-group-item mb-4">
+        <div>
+        <div style="background-color:yellow;" class="mb-4"><strong>{{ day|date:'l' }}</strong> <span style="color:grey;">{{ day|date:'d E' }}</span></div>
+
+            <ul class="list-group list-group-flush">
+                {% for plan in cooking_plans %}
+                    {% if plan.date == day %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="col"><strong>{{ plan.recipe }}</strong></div>
+                    <div class="col">porcje: {{ plan.portions_cooked }}</div>
+                    <a href="{% url 'recipes:show-recipe' idx=plan.recipe_id %}" class="col btn btn-aubergine">cook</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+    </li>
+
+{% endfor %}
+</ul>
+
+<div class="row mb-5">
+<a href="{% url 'plans:week-plan-summary' week_start=week_start %}" class="btn btn-aubergine">dalej</a>
+</div>
+
+{% endblock %}
+

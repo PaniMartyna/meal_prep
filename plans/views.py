@@ -2,6 +2,7 @@ from datetime import date, timedelta, datetime
 
 from django import views
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -92,9 +93,7 @@ class PlanDetailView(views.View):
         already_chosen_recipes_ids = []
         for recipe in already_chosen_recipes:
             already_chosen_recipes_ids.append(recipe.recipe_id)
-        print(already_chosen_recipes_ids)
         recipe_list = Recipe.objects.all().filter(added_by=request.user).exclude(pk__in=already_chosen_recipes_ids)
-        print(recipe_list)
         return render(request, 'plans/plan_detail.html', {
             'meal_date': meal_date,
             'meal': meal,
@@ -113,6 +112,7 @@ class PlanDetailView(views.View):
 
         return redirect(reverse('plans:week-plan', args=[week_start]))
 
+
 def get_recipes_for_the_week(week_start):
     base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
     day_list_7 = [base + timedelta(days=2) + timedelta(days=x) for x in range(7)]
@@ -125,6 +125,7 @@ def get_recipes_for_the_week(week_start):
             recipe_list[plan.recipe] = []
         recipe_list[plan.recipe].append(plan.date)
     return day_list_9, plans_list, recipe_list
+
 
 class WeekPlanSummaryView(views.View):
 
@@ -141,12 +142,17 @@ class WeekPlanSummaryView(views.View):
         for recipe, dates in recipe_list.items():
             cooking_date = datetime.strptime(request.POST.get(f'{recipe.id}_cooked'), '%Y-%m-%d').date()
             cooking_portions = request.POST.get(f'{recipe.id}_portions')
-            if cooking_date in dates:
-                plan_to_update = DayPlan.objects.get(date=cooking_date, recipe=recipe, user=request.user)
-                plan_to_update.is_cooked = True
-                plan_to_update.portions_cooked = cooking_portions
-                plan_to_update.save()
-            else:
+            try:
+                recipe_cooking_plan = DayPlan.objects.get(
+                    date__in=day_list_9,
+                    recipe=recipe,
+                    is_cooked=True,
+                    user=request.user)
+                """if cooking was already planned - update it"""
+                recipe_cooking_plan.date = cooking_date
+                recipe_cooking_plan.portions_cooked = cooking_portions
+                recipe_cooking_plan.save()
+            except ObjectDoesNotExist:
                 DayPlan.objects.create(
                     date=cooking_date,
                     recipe=recipe,
@@ -155,10 +161,21 @@ class WeekPlanSummaryView(views.View):
                     is_eaten=False,
                     user=request.user)
 
-        return redirect(reverse('plans:week_cook_summary', args=[week_start]))
+        return redirect(reverse('plans:week-cook-summary', args=[week_start]))
 
 
 class WeekCookSummaryView(views.View):
-    pass
+
+    def get(self, request, week_start):
+        base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
+        day_list_9 = [base + timedelta(days=x) for x in range(9)]
+        cooking_plans = DayPlan.objects.filter(date__in=day_list_9, is_cooked=True)
+        for plan in cooking_plans:
+            print(plan)
+        return render(request, 'plans/week_cook_summary.html', {
+            'week_start': week_start,
+            'day_list': day_list_9,
+            'cooking_plans': cooking_plans,
+        })
 
 

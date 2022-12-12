@@ -10,12 +10,12 @@ class DayPlan(models.Model):
     meal = models.ForeignKey(MealSetting, null=True, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, null=True, on_delete=models.CASCADE)
     is_cooked = models.BooleanField(default=False)
-    portions_cooked = models.IntegerField(default=1)
+    portions_cooked = models.IntegerField(null=True)
     is_eaten = models.BooleanField()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ['date', 'meal', 'recipe']
+        unique_together = ['date', 'meal', 'recipe', 'is_cooked', 'is_eaten']
 
     def __str__(self):
         return f'plan użytkownika {self.user.username} ' \
