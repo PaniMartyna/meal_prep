@@ -11,15 +11,12 @@
       {% for product in products %}
         <li class="list-group-item d-flex justify-content-between align-items-start">
         <p style="color: #404040;">{{ product }}</p>
-{#        <span>#}
-{#        <a href="{% url 'shopping:delete-product' idx=recipe.id %}" style="text-decoration: none;">&#128465;</a>#}
-{#        </span>#}
         </li>
       {% empty %}
         <p>twoja lista jest pusta</p>
       {% endfor %}
     </ul><br><br>
-{#    <p><a href="{% url 'recipes:add-recipe' %}" class="btn btn-info btn-aubergine">dodaj nowy przepis</a></p>#}
+
 
 
 {% endblock %}

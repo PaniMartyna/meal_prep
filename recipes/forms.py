@@ -73,3 +73,12 @@ class RecipeAddForm(forms.ModelForm):
         fields = ['name', 'portions', 'ingredients', 'method', 'meal_tags']
 
 
+class RecipeEditForm(RecipeAddForm):
+
+    name = forms.CharField(label="",
+                           widget=forms.TextInput(attrs={
+                                'placeholder': 'nazwa dania',
+                                'autofocus': 'autofocus'
+                                }),
+                            )
+
