@@ -78,6 +78,7 @@ class RecipeShowView(LoginRequiredMixin, views.View):
         meal_tags = recipe.meal_tags.all()
 
         return render(request, 'recipes/show_recipe.html', {
+                'id': recipe.id,
                 'name': recipe.name,
                 'portions': recipe.portions,
                 'ingredients': json.loads(recipe.ingredients),

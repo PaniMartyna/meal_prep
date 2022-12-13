@@ -32,5 +32,7 @@
         </div>
 
     </div>
+    <a href="{% url 'recipes:edit-recipe' pk=id %}" class="btn btn-aubergine">edytuj</a>
+    <a href="{% url 'recipes:delete-recipe' idx=id %}" class="btn btn-aubergine">usuń</a>
 
 {% endblock %}
