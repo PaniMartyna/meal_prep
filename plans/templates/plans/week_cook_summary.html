@@ -6,12 +6,29 @@
 
 {% block content %}
 
+<div class="mb-5">
+<h3>Zaplanuj dni zakupowe:</h3>
+<ol>
+    <li>zaznacz, w które dni wybierzesz się na zakupy</li>
+</ol>
+</div>
+
+<form method="post">
+{% csrf_token %}
+
 <ul class="list-group list-group-flush">
 {% for day in day_list %}
 
     <li class="list-group-item mb-4">
         <div>
-        <div style="background-color:yellow;" class="mb-4"><strong>{{ day|date:'l' }}</strong> <span style="color:grey;">{{ day|date:'d E' }}</span></div>
+        <div style="background-color:yellow;" class="mb-4"><strong>{{ day|date:'l' }}</strong> <span style="color:grey;">{{ day|date:'d E' }}</span>
+        </div>
+        <span class="btn-multichoice btn-multichoice-sm" style="width: fit-content">
+           <label>
+              <input type="checkbox" value="{{ day|date:'Y-m-d' }}" name="do_shopping"><span>shop</span>
+           </label>
+        </span>
+
 
             <ul class="list-group list-group-flush">
                 {% for plan in cooking_plans %}
@@ -32,8 +49,8 @@
 </ul>
 
 <div class="row mb-5">
-<a href="{% url 'plans:week-plan-summary' week_start=week_start %}" class="btn btn-aubergine">dalej</a>
+<button type="submit" class="btn btn-aubergine">zapisz</button>
 </div>
-
+</form>
 {% endblock %}
 

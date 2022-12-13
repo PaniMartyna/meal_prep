@@ -2,16 +2,16 @@ import json
 
 from django import views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import ListView
 
 from . import forms
 from .models import Recipe, MealTag
 
 
 class RecipeAddView(LoginRequiredMixin, views.View):
+    """Adding new recipes to the cookbook"""
     login_url = reverse_lazy('login')
 
     def post(self, request):
@@ -45,6 +45,7 @@ class RecipeAddView(LoginRequiredMixin, views.View):
 
 
 class RecipeShowView(LoginRequiredMixin, views.View):
+    """Showing recipe details"""
     login_url = reverse_lazy('login')
 
     def get(self, request, idx):
@@ -61,6 +62,7 @@ class RecipeShowView(LoginRequiredMixin, views.View):
 
 
 class RecipeListView(LoginRequiredMixin, ListView):
+    """Showing all user's recipes"""
     login_url = reverse_lazy('login')
 
     template_name = 'recipes/recipes_list.html'
@@ -72,6 +74,7 @@ class RecipeListView(LoginRequiredMixin, ListView):
 
 
 class RecipeDeleteView(views.View):
+    """deleting recipes from cookbook"""
 
     def get(self, request, idx):
         recipe_to_delete = Recipe.objects.get(pk=idx)

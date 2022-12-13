@@ -11,9 +11,9 @@
 <ol>
     <li>dla każdego dania wpisz liczbę porcji, której potrzebujesz w całym tygodniu</li>
     <li>dla każdego dania zaznacz, kiedy planujesz go ugotować</li>
-    <li>zaznacz, w które dni wybierzesz się na zakupy</li>
 </ol>
 </div>
+
 
 <form method="post">
 {% csrf_token %}
@@ -29,6 +29,7 @@
       <th scope="col">gotowanie</th>
     </tr>
   </thead>
+
   <tbody>
   {% for recipe, dates in recipe_list.items %}
     <tr>
@@ -42,29 +43,18 @@
       {% endfor %}
       <td style="text-align: center;">
           <label>
-              <input name="{{ recipe.id }}_portions" type="number" min="1" max="15" step="0.5" style="width: 50px;">
+              <input name="{{ recipe.id }}_portions" type="number" min="1" max="15" step="0.5" value="{{ recipe.portions }}"
+                      style="width: 50px;" required>
           </label>
-          </td>
+      </td>
       <td style="text-align: center;">
           <label>
-              <input name="{{ recipe.id }}_cooked" type="date">
+              <input name="{{ recipe.id }}_cooked" type="date" value="{{ dates.0|date:'Y-m-d' }}" required>
           </label>
       </td>
     </tr>
   {% endfor %}
-  <tr>
-      <th></th>
 
-      {% for day in day_list_9 %}
-      <td>
-        <div class="btn-multichoice btn-multichoice-sm" style="width: fit-content">
-           <label>
-              <input type="checkbox" value="{{ choice_id }}" name="meal_name"><span>shop</span>
-           </label>
-        </div>
-
-      {% endfor %}
-  </tr>
   </tbody>
 </table>
 
