@@ -7,10 +7,9 @@
 
 
 {% block content %}
-    <h1>łatwy meal prep!</h1>
 
     {% if user.is_authenticated %}
-        <p class="mb-5">cześć {{ user.username }}!</p>
+        <h1 class="mb-5">cześć {{ user.username }}!</h1>
 
         <h3 class="mt-5">dzisiejsze menu:</h3>
         <ul class="list-group list-group-flush">
@@ -27,16 +26,31 @@
         {% endfor %}
         </ul>
 
+        {% if cooking_list %}
         <h3 class="mt-5">dzisiaj gotujesz:</h3>
         <ul class="list-group list-group-flush">
+        {{ cooked_list }}
             {% for item in cooked_list %}
              <li class="list-group-item"><a href="{% url 'recipes:show-recipe' idx=item.recipe_id %}" style="color: #404040; text-decoration: none">
                  {{ item.recipe }}
              </a></li>
             {% endfor %}
         </ul>
+        {% else %}
+        <h3 class="mt-5">dzisiaj nie gotujesz!</h3>
+        {% endif %}
+
+        {% if shopping_list %}
+        <h3 class="mt-5">kup dzisiaj:</h3>
+        <ul class="list-group list-group-flush">
+            {% for product in shopping_list %}
+                  <li class="list-group-item">{{ product }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
     {% else %}
+        <h1>łatwy meal prep!</h1>
         <p>Zaloguj się raz, dwa! >>
         <a href="{% url 'login' %}">KLIK!</a></p>
     {% endif %}

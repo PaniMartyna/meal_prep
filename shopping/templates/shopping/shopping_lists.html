@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+{% block title %}
+    shopping navigation
+{% endblock %}
+
+{% block content %}
+
+<div class="row row-cols-5 mt-5">
+  {% for list in shopping_lists %}
+  <div class="col">
+    <a class="card text-center card-aubergine-link" style="width: auto;" href="{% url 'shopping:shopping-list' idx=list.id %}">
+      <div class="card-body">
+        <p class="card-text">{{ list.date|date:'d E Y' }}</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+import json
 from datetime import date, timedelta, datetime
 
 from django import views
@@ -223,5 +224,10 @@ class WeekCookSummaryView(LoginRequiredMixin, views.View):
             for recipe in recipes_cooked_in_range:
                 recipe.shopping_list = shopping_list
                 recipe.save()
+            # transfer products to product list as json
+            # shopping_list_to_transfer = ShoppingList.objects.get(date=shopping_day, user=request.user)
+            # product_list = json.loads(shopping_list_to_transfer.products)
+            # for recipe in shopping_list_to_transfer.recipes:
+            #     shopping_list_to_transfer.products = json.dumps()
 
         return redirect(reverse('home'))
