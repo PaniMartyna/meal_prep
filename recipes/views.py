@@ -17,6 +17,7 @@ def save_recipe_to_db(form, user, action='create', pk=None):
     portions = form.cleaned_data['portions']
     method = json.dumps([step for step in form.cleaned_data['method'].split('\r\n')])
     ingredients = json.dumps([product for product in form.cleaned_data['ingredients'].split('\r\n')])
+    meal_tags = form.cleaned_data['meal_tags']
 
     if action == 'update':
         recipe = Recipe.objects.get(pk=pk)
@@ -27,7 +28,6 @@ def save_recipe_to_db(form, user, action='create', pk=None):
         recipe.added_by_id = user.id
         recipe.save()
 
-        meal_tags = form.cleaned_data['meal_tags']
         meal_tags_to_clear = MealTag.objects.filter(recipes__id=pk)
         for tag in meal_tags_to_clear:
             tag.recipes.remove(recipe)
@@ -42,7 +42,6 @@ def save_recipe_to_db(form, user, action='create', pk=None):
             ingredients=ingredients,
             added_by_id=user.id)
 
-        meal_tags = form.cleaned_data['meal_tags']
         for tag in meal_tags:
             meal_tag = MealTag.objects.get(pk=tag)
             meal_tag.recipes.add(recipe)
@@ -78,9 +77,7 @@ class RecipeShowView(LoginRequiredMixin, views.View):
         meal_tags = recipe.meal_tags.all()
 
         return render(request, 'recipes/show_recipe.html', {
-                'id': recipe.id,
-                'name': recipe.name,
-                'portions': recipe.portions,
+                'recipe': recipe,
                 'ingredients': json.loads(recipe.ingredients),
                 'method': json.loads(recipe.method),
                 'meal_tags': meal_tags,

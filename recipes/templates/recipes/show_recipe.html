@@ -6,12 +6,12 @@
 
 {% block content %}
     <div class="row text-start">
-        <h1>{{ name }}</h1>
+        <h1>{{ recipe.name }}</h1>
         <h5>{% for tag in meal_tags %}
             <span class="badge text-bg-warning">{{ tag }}</span>
         {% endfor %}
         </h5>
-    <p>porcje: {{ portions }}</p>
+    <p>porcje: {{ recipe.portions }}</p>
     </div><br>
     <div class="row">
         <div class="col text-start">
@@ -32,7 +32,7 @@
         </div>
 
     </div>
-    <a href="{% url 'recipes:edit-recipe' pk=id %}" class="btn btn-aubergine">edytuj</a>
-    <a href="{% url 'recipes:delete-recipe' idx=id %}" class="btn btn-aubergine">usuń</a>
+    <a href="{% url 'recipes:edit-recipe' pk=recipe.id %}" class="btn btn-aubergine">edytuj</a>
+    <a href="{% url 'recipes:delete-recipe' idx=recipe.id %}" class="btn btn-aubergine">usuń</a>
 
 {% endblock %}

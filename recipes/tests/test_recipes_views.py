@@ -1,77 +1,106 @@
-from django.urls import reverse
+import pytest
+from django.urls import reverse, reverse_lazy
 from pytest_django.asserts import assertTemplateUsed
 
 
 """Test for adding recipe"""
 
 
-def test_add_recipe_url_name(client, user):
+@pytest.mark.django_db
+def test_add_recipe_get(client, user):
+    url = reverse("recipes:add-recipe")
     client.force_login(user)
-    response = client.get(reverse("recipes:add-recipe"))
+    response = client.get(url)
+    form_in_view = response.context['form']
+
     assert response.status_code == 200
-
-
-def test_add_recipe_template(client, user):
-    client.force_login(user)
-    response = client.get(reverse("recipes:add-recipe"))
     assertTemplateUsed(response, 'recipes/add_recipe.html')
+    assert 'dodaj przepis' in str(response.content)
+    from recipes.forms import RecipeAddForm
+    assert isinstance(form_in_view, RecipeAddForm)
 
 
-def test_add_recipe_contains_correct_html(client, user):
+@pytest.mark.django_db
+def test_add_recipe_post(client, user):
+    url = reverse('recipes:add-recipe')
     client.force_login(user)
-    response = client.get(reverse("recipes:add-recipe"))
-    assert 'dodaj przepis' in response.content.decode('UTF-8')
+    data = {
+        'name': 'pierogi',
+        'portions': '6',
+        'ingredients': '1 kg ziemniaków\n500g sera',
+        'method': 'ugotuj ziemniaki\ndodaj ser',
+        'meal_tags': [3, 4],
+
+    }
+    response = client.post(url, data)
+    assert response.status_code == 302
+    print(response.url)
+    assert response.url.startswith(reverse('recipes:show-recipe', args=[1]))
+    from recipes.models import Recipe
+    recipe = Recipe.objects.get(id=1)
+    assert recipe.name == 'Pierogi'
+    assert 'ziemniak' in recipe.ingredients
+    assert recipe.meal_tags.all()[0].id == 3
+    assert recipe.meal_tags.all()[1].id == 4
 
 
-def test_add_recipe_does_not_contain_incorrect_html(client, user):
+def test_show_recipe_get(client, user, recipe):
     client.force_login(user)
-    response = client.get(reverse("recipes:add-recipe"))
-    assert 'bzdurny content' not in response.content.decode('UTF-8')
-
-
-"""Tests for viewing recipe"""
-
-
-def test_show_recipe_url_name(client, user, recipe):
-    client.force_login(user)
-    response = client.get(reverse('recipes:show-recipe', args=[recipe.id]))
+    url = reverse("recipes:show-recipe", args=[recipe.id])
+    response = client.get(url)
     assert response.status_code == 200
-
-
-def test_show_recipe_uses_correct_template(client, user, recipe):
-    client.force_login(user)
-    response = client.get(reverse('recipes:show-recipe', args=[recipe.id]))
     assertTemplateUsed(response, 'recipes/show_recipe.html')
+    assert 'ziemniak' in str(response.content)
+    assert 'Pierogi' in str(response.content)
 
 
-def test_show_recipe_contains_shows_correct_data(client, user, recipe):
+def test_list_recipes(client, user, recipe_list):
     client.force_login(user)
-    response = client.get(reverse('recipes:show-recipe', args=[recipe.id]))
-    assert 'Pierogi' in response.content.decode('UTF-8')
-
-
-"""Tests for listing recipes"""
-
-
-def test_list_recipes_url_name(client, user):
-    client.force_login(user)
-    response = client.get(reverse('recipes:recipe-list'))
+    url = reverse('recipes:recipe-list')
+    response = client.get(url)
     assert response.status_code == 200
-
-
-def test_list_recipes_uses_correct_template(client, user):
-    client.force_login(user)
-    response = client.get(reverse('recipes:recipe-list'))
     assertTemplateUsed(response, 'recipes/recipes_list.html')
+    recipes_form_view = response.context['recipes']
+    assert recipes_form_view.count() == len(recipe_list)
 
 
-def test_list_recipes_contains_correct_html(client, user):
+def test_recipe_delete(client, user, recipe_list):
     client.force_login(user)
-    response = client.get(reverse('recipes:recipe-list'))
-    assert 'twoja książka kucharska' in response.content.decode('UTF-8')
+    from recipes.models import Recipe
+    initial_length = len(Recipe.objects.all())
+    url = reverse('recipes:delete-recipe', args=[1])
+    response = client.get(url)
+    assert response.status_code == 302
+    assert response.url.startswith(reverse('recipes:recipe-list'))
+    assert initial_length - len(Recipe.objects.all()) == 1
 
 
-def test_list_recipes_contains_added_recipe(client, user, recipe):
+def test_edit_recipe_get(client, user, recipe):
     client.force_login(user)
-    response = client.get(reverse('recipes:recipe-list'))
-    assert 'Pierogi' in response.content.decode('UTF-8')
+    url = reverse('recipes:edit-recipe', args=[1])
+    response = client.get(url)
+    form_used = response.context['form']
+    from recipes.forms import RecipeEditForm
+
+    assert response.status_code == 200
+    assertTemplateUsed(response, 'recipes/add_recipe.html')
+    assert isinstance(form_used, RecipeEditForm)
+
+
+def test_edit_recipe_post(client, user, recipe):
+    client.force_login(user)
+    url = reverse_lazy('recipes:edit-recipe', args=[1])
+    data = {
+        'name': 'Uszka z barszczem',
+        'portions': '6',
+        'ingredients': '1 kg ziemniaków\n500g sera',
+        'method': 'ugotuj ziemniaki\ndodaj ser',
+        'meal_tags': [3, 4],
+    }
+    response = client.post(url, data)
+
+    assert response.status_code == 302
+    assert response.url.startswith(reverse('recipes:show-recipe', args=[1]))
+    from recipes.models import Recipe
+    assert Recipe.objects.get(name='Uszka z barszczem')
+
