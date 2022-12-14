@@ -17,7 +17,9 @@
                 {% for meal in meal_list %}
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                         <strong>{{ meal.meal_name }}</strong>
+                    {% if day >= today %}
                     <span><a href="{% url 'plans:plan-detail' week_start=week_start day=day meal_id=meal.id %}" class="btn btn-aubergine">+</a></span>
+                    {% endif %}
                     </li>
                         <div class="ms-4 me-5">
                         <ul class="list-group list-group-flush">
@@ -32,7 +34,9 @@
                                         </a></span>
                                         <span>
                                         <a href="{% url 'plans:plan-recipe-propagate' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#11015;</a>
-                                        <a href="{% url 'plans:plan-recipe-delete' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#128465;</a>
+                                        {% if day >= today %}
+                                            <a href="{% url 'plans:plan-recipe-delete' week_start=week_start day=day meal_id=item.meal.id recipe_id=item.recipe.id %}" style="text-decoration: none;">&#128465;</a>
+                                        {% endif %}
                                         </span>
                                         </li>
                                     {% endif %}

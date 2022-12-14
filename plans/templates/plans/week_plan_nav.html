@@ -8,32 +8,32 @@
 
 <div class="row row-cols-3 mt-5">
   <div class="col">
-    <a class="card text-center card-aubergine-link-active" href="{% url 'plans:week-plan' week_start=current_week_start %}">
+    <a class="card text-center card-aubergine-link-active" href="{% url 'plans:week-plan' week_start=plan_dates.w1_start %}">
       <div class="card-body">
         <h5 class="card-title">aktualny tydzień</h5>
-        <p class="card-text">{{ current_week_start|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w1_start|date:'d E Y' }}</p>
         <p class="card-text">*</p>
-        <p class="card-text">{{ current_week_end|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w1_end|date:'d E Y' }}</p>
       </div>
     </a>
   </div>
   <div class="col">
-    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=next_week_1_start %}">
+    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=plan_dates.w2_start %}">
       <div class="card-body">
         <h5 class="card-title">następny tydzień</h5>
-        <p class="card-text">{{ next_week_1_start|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w2_start|date:'d E Y' }}</p>
         <p class="card-text">*</p>
-        <p class="card-text">{{ next_week_1_end|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w2_end|date:'d E Y' }}</p>
       </div>
     </a>
   </div>
   <div class="col">
-    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=next_week_2_start %}">
+    <a class="card text-center card-aubergine-link" href="{% url 'plans:week-plan' week_start=plan_dates.w3_start %}">
       <div class="card-body">
         <h5 class="card-title">za dwa tygodnie</h5>
-        <p class="card-text">{{ next_week_2_start|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w3_start|date:'d E Y' }}</p>
         <p class="card-text">*</p>
-        <p class="card-text">{{ next_week_2_end|date:'d E Y' }}</p>
+        <p class="card-text">{{ plan_dates.w3_end|date:'d E Y' }}</p>
       </div>
     </a>
   </div>

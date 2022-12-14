@@ -1,30 +1,9 @@
 import json
 
 import pytest
-from django.urls import reverse
 
+from plans.models import DayPlan
 from recipes.models import Recipe, MealTag
-
-#
-# @pytest.fixture(scope='function')
-# def homepage(client):
-#     """Go to homepage"""
-#     response = client.get(reverse('home'))
-#     yield response
-#
-#
-# @pytest.fixture(scope='function')
-# def signup(client):
-#     """Go to signup page"""
-#     response = client.get(reverse('users:signup'))
-#     yield response
-#
-#
-# @pytest.fixture(scope='function')
-# def about(client):
-#     """Go to about page"""
-#     response = client.get(reverse('about'))
-#     yield response
 
 
 @pytest.fixture(scope='function')
@@ -56,3 +35,11 @@ def recipe_list(db, user):
     for i in range(10):
         r_list.append(Recipe.objects.create(pk=i, name=str(i), portions=str(i), ingredients=str(i), added_by=user))
     yield r_list
+
+
+@pytest.fixture(scope='function')
+def day_plan(db, user, recipe_list):
+    DayPlan.objects.create(date='2022-12-12', meal_id=1, recipe_id=1, is_eaten=False, is_cooked=True, user=user)
+    DayPlan.objects.create(date='2022-12-12', meal_id=1, recipe_id=1, is_eaten=True, user=user)
+    DayPlan.objects.create(date='2022-12-13', meal_id=1, recipe_id=2, is_eaten=True, user=user)
+    DayPlan.objects.create(date='2022-12-14', meal_id=1, recipe_id=2, is_eaten=True, user=user)
