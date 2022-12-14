@@ -13,7 +13,7 @@ class DayPlan(models.Model):
     is_cooked = models.BooleanField(default=False)
     portions_cooked = models.IntegerField(null=True)
     shopping_list = models.ForeignKey(ShoppingList, models.SET_NULL, null=True)
-    is_eaten = models.BooleanField()
+    is_eaten = models.BooleanField(default=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:

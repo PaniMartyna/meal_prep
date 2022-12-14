@@ -17,6 +17,20 @@ from recipes.models import Recipe
 from shopping.models import ShoppingList
 
 
+def generate_7_days_of_week(week_start):
+    """generate date ranges for later querying for recipes"""
+
+    base = datetime.strptime(week_start, '%Y-%m-%d').date()
+    return [base + timedelta(days=x) for x in range(7)]
+
+
+def generate_9_days_of_week(week_start):
+    """generate date ranges for later querying for recipes"""
+
+    base = datetime.strptime(week_start, '%Y-%m-%d').date()
+    return [base - timedelta(days=2) + timedelta(days=x) for x in range(9)]
+
+
 class WeekPlanNavView(LoginRequiredMixin, views.View):
     """Navigation for planning. Shows current week and two following weeks"""
     login_url = reverse_lazy('login')
@@ -45,13 +59,10 @@ class WeekPlanView(LoginRequiredMixin, views.View):
 
     def get(self, request, week_start):
         user = request.user
-
-        base = datetime.strptime(week_start, '%Y-%m-%d').date()
-        days_range = 7
         day_today = datetime.today().date()
 
         # generate day list
-        day_list = [base + timedelta(days=x) for x in range(days_range)]
+        day_list = generate_7_days_of_week(week_start)
 
         # show list of meals set by the user
         meal_list = user.selected_meals.all()
@@ -63,7 +74,8 @@ class WeekPlanView(LoginRequiredMixin, views.View):
                 day_meal_plan.append(DayPlan.objects.filter(
                     user=request.user,
                     date=day,
-                    meal_id=meal.id))
+                    meal_id=meal.id,
+                    is_eaten=True))
 
         return render(request, 'plans/week_plan.html', {
             'week_start': week_start,
@@ -82,8 +94,7 @@ class PlanRecipeDeleteView(LoginRequiredMixin, views.View):
         recipe_to_delete.delete()
 
         # get list of days for cooking week (9 days)
-        base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
-        day_list_9 = [base + timedelta(days=x) for x in range(9)]
+        day_list_9 = generate_9_days_of_week(week_start)
 
         # check if recipe is eaten during the week. If not - delete it from cooking list
         if not DayPlan.objects.filter(date__in=day_list_9, recipe_id=recipe_id, is_eaten=True):
@@ -111,12 +122,14 @@ class PlanRecipePropagateView(LoginRequiredMixin, views.View):
 
 
 class PlanDetailView(LoginRequiredMixin, views.View):
-    """Shows chosen meal in a chosen day and enables user to pick recipes"""
+    """Shows chosen meal in a chosen day and enables user to pick recipes.
+    Creates initial cooking plan for the recipe"""
+
     def get(self, request, week_start, day, meal_id):
         meal = MealSetting.objects.get(pk=meal_id)
         meal_date = datetime.strptime(day, '%Y-%m-%d').date()
 
-        already_chosen_recipes = DayPlan.objects.filter(date=meal_date, meal_id=meal_id)
+        already_chosen_recipes = DayPlan.objects.filter(date=meal_date, meal_id=meal_id, is_eaten=True)
         already_chosen_recipes_ids = []
         for recipe in already_chosen_recipes:
             already_chosen_recipes_ids.append(recipe.recipe_id)
@@ -129,6 +142,10 @@ class PlanDetailView(LoginRequiredMixin, views.View):
         })
 
     def post(self, request, week_start, day, meal_id):
+
+        day_list_9 = generate_9_days_of_week(week_start)
+        day_list_7 = generate_7_days_of_week(week_start)
+
         selected_recipes_ids = request.POST.getlist('recipes')
         selected_recipes = []
         for recipe_id in selected_recipes_ids:
@@ -138,6 +155,35 @@ class PlanDetailView(LoginRequiredMixin, views.View):
         for recipe in selected_recipes:
             DayPlan.objects.create(date=meal_date, meal=meal, recipe=recipe, is_eaten=True, user=request.user)
 
+            # check if this recipe has cooking_plan for the week.
+            # if yes: check if the cooking_plan precedes first eating,
+            # if not: create cooking_plan in the first day of eating
+
+            first_eaten = DayPlan.objects.filter(
+                date__in=day_list_7,
+                recipe=recipe,
+                is_eaten=True,
+                user=request.user).order_by('date')[0]
+
+            try:
+                cooking_plan = DayPlan.objects.get(
+                    date__in=day_list_9,
+                    recipe=recipe,
+                    is_cooked=True,
+                    user=request.user)
+
+                if cooking_plan.date > first_eaten.date:
+                    cooking_plan.date = first_eaten.date
+                    cooking_plan.save(update_fields=['date'])
+
+            except ObjectDoesNotExist:
+                DayPlan.objects.create(
+                    date=first_eaten.date,
+                    meal=meal,
+                    recipe=recipe,
+                    is_cooked=True,
+                    user=request.user)
+
         return redirect(reverse('plans:week-plan', args=[week_start]))
 
 
@@ -145,40 +191,41 @@ def get_recipes_for_the_week(week_start):
     """get all eaten recipes for a given week"""
 
     # generate date ranges for later querying for recipes
-    base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
-    day_list_7 = [base + timedelta(days=2) + timedelta(days=x) for x in range(7)]
-    day_list_9 = [base + timedelta(days=x) for x in range(9)]
+    day_list_7 = generate_7_days_of_week(week_start)
+    day_list_9 = generate_9_days_of_week(week_start)
 
-    # get all recipes for the week
-    weekly_plan = DayPlan.objects.filter(date__in=day_list_7, is_eaten=True)
-    weekly_plan.append(DayPlan.objects.filter(date__in=day_list_9, is_cooked=True)).order_by('recipe__name')
+    # get all recipes for the week, cooked and eaten
+    weekly_plan = DayPlan.objects.filter(
+        date__in=day_list_7, is_eaten=True
+    ) | DayPlan.objects.filter(
+        date__in=day_list_9, is_cooked=True
+    ).order_by('recipe__name')
 
-    plans_list = {
-        'recipe.name': {'is_cooked': [], 'is_eaten': []}
-    }
     recipe_list = {}
-    for plan in plans_list:
+    for plan in weekly_plan:
         if plan.recipe not in recipe_list.keys():
-            recipe_list[plan.recipe] = []
-        recipe_list[plan.recipe].append(plan.date)
-    return day_list_9, plans_list, recipe_list
+            recipe_list[plan.recipe] = {'is_cooked': [], 'is_eaten': []}
+        if plan.is_cooked:
+            recipe_list[plan.recipe]['is_cooked'].append(plan.date)
+        if plan.is_eaten:
+            recipe_list[plan.recipe]['is_eaten'].append(plan.date)
 
-
+    return day_list_9, recipe_list
 
 
 class WeekPlanSummaryView(LoginRequiredMixin, views.View):
     """Table view of all recipes planned for the week.
     Here user can decide when to cook them and when to shop for ingredients"""
+
     def get(self, request, week_start):
-        day_list_9, plans_list, recipe_list = get_recipes_for_the_week(week_start)
+        day_list_9, recipe_list = get_recipes_for_the_week(week_start)
         return render(request, 'plans/week_plan_summary.html', {
             'day_list_9': day_list_9,
             'recipe_list': recipe_list,
-            # 'plans_list': plans_list,
         })
 
     def post(self, request, week_start):
-        day_list_9, plans_list, recipe_list = get_recipes_for_the_week(week_start)
+        day_list_9, recipe_list = get_recipes_for_the_week(week_start)
 
         # saving cooking plans"
         for recipe, dates in recipe_list.items():
@@ -212,9 +259,9 @@ class WeekPlanSummaryView(LoginRequiredMixin, views.View):
 class WeekCookSummaryView(LoginRequiredMixin, views.View):
     """summary view for cooking plans - shows when to cook what"""
     def get(self, request, week_start):
-        base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
-        day_list_9 = [base + timedelta(days=x) for x in range(9)]
+        day_list_9 = generate_9_days_of_week(week_start)
         cooking_plans = DayPlan.objects.filter(date__in=day_list_9, is_cooked=True)
+
         return render(request, 'plans/week_cook_summary.html', {
             'week_start': week_start,
             'day_list': day_list_9,
@@ -222,8 +269,7 @@ class WeekCookSummaryView(LoginRequiredMixin, views.View):
         })
 
     def post(self, request, week_start):
-        base = datetime.strptime(week_start, '%Y-%m-%d').date() - timedelta(days=2)
-        day_list_9 = [base + timedelta(days=x) for x in range(9)]
+        day_list_9 = generate_9_days_of_week(week_start)
 
         # Create ranges for shopping - when to shop for which days ahead.
         shopping_days = request.POST.getlist('do_shopping')

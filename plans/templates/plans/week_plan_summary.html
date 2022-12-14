@@ -12,6 +12,12 @@
     <li>dla każdego dania wpisz liczbę porcji, której potrzebujesz w całym tygodniu</li>
     <li>dla każdego dania zaznacz, kiedy planujesz go ugotować</li>
 </ol>
+    <hr>
+    <div class="row" style="width: 50%;">
+        <div class="col">&#129000; jedzenie</div>
+        <div class="col">&#128997; gotowanie</div>
+        <div class="col">&#129003; gotowanie i jedzenie</div>
+    </div>
 </div>
 
 
@@ -31,12 +37,16 @@
   </thead>
 
   <tbody>
-  {% for recipe, dates in recipe_list.items %}
+  {% for recipe, plan in recipe_list.items %}
     <tr>
       <th scope="row" style="text-align: right;">{{ recipe }}</th>
       {% for day in day_list_9 %}
-          {% if day in dates %}
+          {% if day in plan.is_eaten and day not in plan.is_cooked%}
               <td style="text-align: center;">&#129000;</td>
+          {% elif day not in plan.is_eaten and day in plan.is_cooked%}
+              <td style="text-align: center;">&#128997;</td>
+          {% elif day in plan.is_eaten and day in plan.is_cooked%}
+              <td style="text-align: center;">&#129003;</td>
           {% else %}
               <td></td>
           {% endif %}
@@ -49,7 +59,7 @@
       </td>
       <td style="text-align: center;">
           <label>
-              <input name="{{ recipe.id }}_cooked" type="date" value="{{ dates.0|date:'Y-m-d' }}" required>
+              <input name="{{ recipe.id }}_cooked" type="date" value="{{ plan.is_cooked.0|date:'Y-m-d' }}" required>
           </label>
       </td>
     </tr>

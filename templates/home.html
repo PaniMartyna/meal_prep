@@ -26,10 +26,9 @@
         {% endfor %}
         </ul>
 
-        {% if cooking_list %}
+        {% if cooked_list %}
         <h3 class="mt-5">dzisiaj gotujesz:</h3>
         <ul class="list-group list-group-flush">
-        {{ cooked_list }}
             {% for item in cooked_list %}
              <li class="list-group-item"><a href="{% url 'recipes:show-recipe' idx=item.recipe_id %}" style="color: #404040; text-decoration: none">
                  {{ item.recipe }}
