@@ -13,7 +13,7 @@ class ShoppingNavView(LoginRequiredMixin, views.View):
     """Shows next 5 shopping lists starting today"""
     def get(self, request):
         today = datetime.today()
-        shopping_lists = ShoppingList.objects.filter(date__gte=today).order_by('date')[:5]
+        shopping_lists = ShoppingList.objects.filter(date__gte=today, user=request.user).order_by('date')[:5]
 
         return render(request, 'shopping/shopping_lists.html', {
             'shopping_lists': shopping_lists,

@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 
 import pytest
 
@@ -43,3 +44,11 @@ def day_plan(db, user, recipe_list):
     DayPlan.objects.create(date='2022-12-12', meal_id=1, recipe_id=1, is_eaten=True, user=user)
     DayPlan.objects.create(date='2022-12-13', meal_id=1, recipe_id=2, is_eaten=True, user=user)
     DayPlan.objects.create(date='2022-12-14', meal_id=1, recipe_id=2, is_eaten=True, user=user)
+
+
+@pytest.fixture(scope='function')
+def shopping_lists(db, user, recipe):
+    from shopping.models import ShoppingList
+
+    ShoppingList.objects.create(pk=1, date=datetime.today(), user=user)
+    ShoppingList.objects.create(pk=2, date=datetime.today() + timedelta(days=3), user=user)

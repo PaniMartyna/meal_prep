@@ -4,7 +4,7 @@ from users.models import CustomUser
 
 
 class ShoppingList(models.Model):
-    date = models.DateField(unique=True)
+    date = models.DateField()
     products = models.TextField(null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
