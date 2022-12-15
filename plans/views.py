@@ -279,7 +279,7 @@ class WeekCookSummaryView(LoginRequiredMixin, views.View):
 
         # For each shopping day, based on its shopping range - get products for the meals in shopping range
         for shopping_day, shopping_range in shopping_list_ranges.items():
-            recipes_cooked_in_range = DayPlan.objects.filter(date__in=shopping_range, is_cooked=True)
+            recipes_cooked_in_range = DayPlan.objects.filter(date__in=shopping_range, is_cooked=True, user=request.user)
             if ShoppingList.objects.filter(date=shopping_day, user=request.user).exists():
                 shopping_list = ShoppingList.objects.get(date=shopping_day, user=request.user)
             else:
