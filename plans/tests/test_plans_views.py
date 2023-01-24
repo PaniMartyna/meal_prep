@@ -165,13 +165,15 @@ def test_plan_week_summary_post(client, user, day_plan):
     data = {
         '1_portions': 14,
         '1_cooked': '2022-12-10',
+        '2_portions': 15,
+        '2_cooked': '2022-12-11',
     }
     response = client.post(url, data)
 
     assert response.status_code == 302
     assert response.url.startswith(reverse('plans:week-cook-summary', args=['2022-12-10']))
     from plans.models import DayPlan
-    assert DayPlan.objects.get(date='2022-12-10', is_cooked=True, recipe_id=1, portions_cooked=44)
+    assert DayPlan.objects.get(date='2022-12-10', is_cooked=True, recipe_id=1, portions_cooked=14)
 
 # ====================================================================================================================
 
