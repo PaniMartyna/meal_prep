@@ -8,13 +8,12 @@ from preferences.models import MealSetting
 
 
 class UserPreferencesView(LoginRequiredMixin, views.View):
-    pass
     login_url = reverse_lazy('login')
 
     def get(self, request):
         form = forms.MealSettingsForm()
-        user = request.user
-        meals_set = user.selected_meals.all()
+        user = request.user.userprofile
+        meals_set = user.meals.all()
         print(meals_set)
         if meals_set:
             selected_meals_ids = [meal.id for meal in meals_set]
@@ -27,12 +26,12 @@ class UserPreferencesView(LoginRequiredMixin, views.View):
 
     def post(self, request):
         form = forms.MealSettingsForm(request.POST)
-        user = request.user
+        user = request.user.userprofile
         if form.is_valid():
-            selected_meals_ids = form.cleaned_data['meal_name']
-            for meal_id in selected_meals_ids:
-                meal = MealSetting.objects.get(pk=meal_id)
-                user.selected_meals.add(meal)
+            selected_meals_ids = form.cleaned_data['meals']
+            for meal_name in selected_meals_ids:
+                meal = MealSetting.objects.get(meal_name=meal_name)
+                user.meals.add(meal)
             return redirect(reverse_lazy('home'))
         else:
             return render(request, 'preferences/meal_settings.html', {'form': form})

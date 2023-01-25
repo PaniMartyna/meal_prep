@@ -3,30 +3,17 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 
-from preferences.models import MealSetting
+from preferences.models import MealSetting, UserProfile
 
 
 class MealSettingsForm(forms.ModelForm):
-    meals_list = MealSetting.objects.all()
-    MEALS = [(str(meal.id), meal.meal_name) for meal in meals_list]
 
     class Meta:
-        model = MealSetting
-        fields = ['meal_name']
+        model = UserProfile
+        fields = ('meals',)
 
-    meal_name = forms.MultipleChoiceField(choices=MEALS,
-                                          label="",
-                                          widget=forms.CheckboxSelectMultiple(),
-                                          required=True,
-                                          error_messages={
-                                              'required': 'wybierz przynajmniej jeden posiłek, '
-                                                          'żeby zacząć korzystać z funkcji planowania'
-                                          })
+    meals = forms.ModelMultipleChoiceField(queryset=MealSetting.objects.all(),
+                                           label="",
+                                           widget=forms.CheckboxSelectMultiple,
+                                           required=True)
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.helper = FormHelper()
-    #     self.helper.layout = Layout(
-    #         InlineCheckboxes('meals', css_class="btn btn-aubergine"),
-    #         Submit('submit', 'zapisz', css_class='btn btn-aubergine')
-    #         )

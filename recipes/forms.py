@@ -17,8 +17,15 @@ def validate_recipe_exists(value):
 
 class RecipeAddForm(forms.ModelForm):
 
-    meal_tag_list = MealTag.objects.all()
-    MEAL_TAGS = [(str(tag.id), tag.meal_tag) for tag in meal_tag_list]
+    MEAL_TAG_CHOICES = [
+        (1, 'śniadanie'),
+        (2, 'przekąska'),
+        (3, 'obiad'),
+        (4, 'kolacja'),
+        (5, 'zupa'),
+        (6, 'deser'),
+        (7, 'na drogę'),
+    ]
 
     name = forms.CharField(label="",
                            widget=forms.TextInput(attrs={
@@ -45,7 +52,7 @@ class RecipeAddForm(forms.ModelForm):
                                 'placeholder': 'opis przygotowania',
                                 }))
 
-    meal_tags = forms.MultipleChoiceField(choices=MEAL_TAGS,
+    meal_tags = forms.MultipleChoiceField(choices=MEAL_TAG_CHOICES,
                                           label="",
                                           widget=forms.CheckboxSelectMultiple(),
                                           required=True,

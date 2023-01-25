@@ -20,17 +20,22 @@
     <div class="column">
     <form method="post">
         {% csrf_token %}
-        <div class="row mb-4">
-        <div class="container-fluid">
-        {% for choice_id, choice_label in form.meal_name.field.choices %}
-            <div class="btn-multichoice">
-               <label>
-                  <input type="checkbox" value="{{ choice_id }}" name="meal_name"><span>{{ choice_label }}</span>
-               </label>
-            </div>
-        {% endfor %}
-        </div>
-        </div>
+        {{ form|crispy }}
+
+
+
+
+{#        <div class="row mb-4">#}
+{#        <div class="container-fluid">#}
+{#        {% for choice_id, choice_label in form.meal_name.field.choices %}#}
+{#            <div class="btn-multichoice">#}
+{#               <label>#}
+{#                  <input type="checkbox" value="{{ choice_id }}" name="meal_name"><span>{{ choice_label }}</span>#}
+{#               </label>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#        </div>#}
+{#        </div>#}
 
         <div class="container">
         <button type="submit" class="btn btn-warning">zapisz</button>
