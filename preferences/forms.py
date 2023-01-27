@@ -17,3 +17,5 @@ class MealSettingsForm(forms.ModelForm):
                                            widget=forms.CheckboxSelectMultiple,
                                            required=True)
 
+
+

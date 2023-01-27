@@ -16,7 +16,7 @@ def clean_meal_setting(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('preferences', '0003_alter_mealsetting_meal_name'),
+        ('preferences', '0001_initial'),
     ]
 
     operations = [

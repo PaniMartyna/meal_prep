@@ -14,7 +14,6 @@ class UserPreferencesView(LoginRequiredMixin, views.View):
         form = forms.MealSettingsForm()
         user = request.user.userprofile
         meals_set = user.meals.all()
-        print(meals_set)
         if meals_set:
             selected_meals_ids = [meal.id for meal in meals_set]
             return render(request, 'preferences/meal_settings.html', {

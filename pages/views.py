@@ -15,12 +15,18 @@ class HomePageView(views.View):
     def get(self, request):
         today = datetime.today()
         if request.user.is_authenticated:
-            if MealSetting.objects.filter(userprofile__user=request.user).count() == 0:
+            if MealSetting.objects.filter(
+                    userprofile__user=request.user,
+                    userprofilemeals__meal_selected=True
+            ).count() == 0:
                 return redirect(reverse('preferences:user-preferences'))
             else:
                 eaten_list = DayPlan.objects.filter(date=today, is_eaten=True, user=request.user)
                 cooked_list = DayPlan.objects.filter(date=today, is_cooked=True, user=request.user)
-                planned_meals = MealSetting.objects.filter(userprofile__user=request.user)
+                planned_meals = MealSetting.objects.filter(
+                    userprofile__user=request.user,
+                    userprofilemeals__meal_selected=True
+                )
                 shopping_for = DayPlan.objects.filter(shopping_list__date=today, user=request.user)
                 shopping_list = []
                 for plan in shopping_for:
