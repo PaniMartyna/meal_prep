@@ -1,4 +1,5 @@
 from django import views
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -11,6 +12,7 @@ class UserPreferencesView(LoginRequiredMixin, views.View):
     login_url = reverse_lazy('login')
 
     def get(self, request):
+        messages.get_messages(request)
         form = forms.MealSettingsForm()
         user = request.user.userprofile
         meals_set = user.meals.all()

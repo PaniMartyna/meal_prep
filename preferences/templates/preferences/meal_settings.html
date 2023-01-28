@@ -12,6 +12,17 @@
 
 {% block content %}
 
+    {% if messages %}
+        {% for message in messages %}
+        <div class="container-fluid p-0">
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+{#                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">#}
+{#                </button>#}
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
     <h1>wybierz posiłki, które chcesz planować:</h1>
     <p style="color:grey">możesz wybrać dowolną liczbę posiłków.
         Te posiłki pojawią się w Twoim tygodniowym planerze.</p>
@@ -47,7 +58,7 @@
 {#        </div>#}
 {#        </div>#}
 
-        <div class="container">
+        <div class="d-grid gap-2 col-3">
         <button type="submit" class="btn btn-warning">zapisz</button>
         </div>
     </form>
