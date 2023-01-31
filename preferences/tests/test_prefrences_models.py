@@ -17,3 +17,8 @@ def test_meal_settings_creation(db, django_user_model):
     assert no_of_user_meals == no_of_available_meals
     assert no_of_user_meals_not_selected == no_of_available_meals
 
+def test_meal_setting_first_setup():
+    pass
+
+def test_meal_setting_change():
+    pass

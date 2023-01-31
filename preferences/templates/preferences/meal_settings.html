@@ -16,8 +16,6 @@
         {% for message in messages %}
         <div class="container-fluid p-0">
             <div class="alert alert-primary alert-dismissible fade show" role="alert">
-{#                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">#}
-{#                </button>#}
                 {{ message }}
             </div>
         </div>
@@ -29,39 +27,30 @@
 
     <div class="container">
     <div class="column">
+
     <form method="post">
         {% csrf_token %}
-        {{ form|crispy }}
 
+    <div class="col-3 mt-5">
+        <table class="table table-striped">
+            {% for meal in meal_list %}
+            <tr>
+            <td class="text-center">
+                <input class="form-check-input mt-1" type="checkbox" name="{{ meal.meal_name }}"
+                        {% if meal.meal_selected %} checked {% endif %}></td>
+                <td>{{ meal.meal_name }}</td>
 
-{#        {% for choice_id, choice_label in form.meals.field.choices %}#}
-{#            <div>#}
-{#               <label>#}
-{#                  <input type="checkbox" value="{{ choice_id }}" name="meals"#}
-{#                  {% if choice_id in selected_meals %}#}
-{#                  checked#}
-{#                  {% endif %}> <span>{{ choice_label }}</span>#}
-{#               </label>#}
-{#            </div>#}
-{#        {% endfor %}#}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-
-{#        <div class="row mb-4">#}
-{#        <div class="container-fluid">#}
-{#        {% for choice_id, choice_label in form.meal_name.field.choices %}#}
-{#            <div class="btn-multichoice">#}
-{#               <label>#}
-{#                  <input type="checkbox" value="{{ choice_id }}" name="meal_name"><span>{{ choice_label }}</span>#}
-{#               </label>#}
-{#            </div>#}
-{#        {% endfor %}#}
-{#        </div>#}
-{#        </div>#}
-
-        <div class="d-grid gap-2 col-3">
+    <div class="d-grid gap-2 col-3 mt-5">
         <button type="submit" class="btn btn-warning">zapisz</button>
-        </div>
+    </div>
+
     </form>
+
     </div>
     </div>
 {% endblock %}
