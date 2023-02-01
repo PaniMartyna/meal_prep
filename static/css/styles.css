@@ -1,6 +1,36 @@
-.bg-image-aubergine {
-    height: auto;
-    width: 100%;
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+#unregistered_home {
+    background: black url("/static/images/Main_background_large.jpg") center/cover;
+}
+
+#dark_logo {
+    font-family: "Homemade Apple";
+    font-size: 25px;
+}
+
+#white_logo {
+    font-family: "Homemade Apple";
+    color: white;
+    font-size: 25px;
+}
+
+#white_about {
+    color: white
+}
+
+#white_about:hover {
+    color: darkgray;
+    background: none;
+}
+
+#unregistered_title {
+    font-family: "Homemade Apple";
+    color: white;
+    font-size: 3em;
 }
 
 .btn-aubergine {

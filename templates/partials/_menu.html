@@ -1,43 +1,52 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-aubergine mb-3">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">MEAL PREP</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<nav class="navbar mb-5" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" {% if user.is_authenticated %} id="dark_logo" {% else %} id="white_logo" {% endif %}
+           href="{% url 'home' %}">
+            meal prep
+        </a>
 
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMP">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarMP" class="navbar-menu">
         {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'plans:week-plan-nav' %}">planuj!</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'shopping:shopping-nav' %}">zakupy</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'recipes:recipe-list' %}">książka kucharska</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'recipes:add-recipe' %}">dodaj przepis</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'preferences:user-preferences' %}">ustawienia</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">wyloguj {{ user.fullname }}</a>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'users:signup' %}">zarejestruj</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">zaloguj</a>
-          </li>
+        <div class="navbar-start">
+            <a class="navbar-item" aria-current="page" href="{% url 'plans:week-plan-nav' %}">planuj!</a>
+            <a class="navbar-item" aria-current="page" href="{% url 'shopping:shopping-nav' %}">zakupy</a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" aria-current="page" href="{% url 'recipes:recipe-list' %}">książka kucharska</a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" aria-current="page" href="{% url 'recipes:add-recipe' %}">dodaj przepis</a>
+
+                </div>
+            </div>
+             <a class="navbar-item" aria-current="page" href="{% url 'preferences:user-preferences' %}">ustawienia</a>
         {% endif %}
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'about' %}">o aplikacji</a>
-        </li>
-      </ul>
+             <a class="navbar-item" aria-current="page"
+                     {% if not user.is_authenticated %} id="white_about" {% endif %}
+                href="{% url 'about' %}">o aplikacji</a>
+
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+               <div class="buttons">
+                   {% if user.is_authenticated %}
+                    <a class="button is-light is-rounded" aria-current="page" href="{% url 'logout' %}">wyloguj</a>
+                   {% else %}
+                     <a class="button is-light is-rounded" aria-current="page" href="{% url 'login' %}">zaloguj</a>
+                     <a class="button is-outlined is-rounded" aria-current="page" href="{% url 'users:signup' %}">
+                       <strong>zarejestruj</strong>
+                     </a>
+                   {% endif %}
+               </div>
+            </div>
     </div>
   </div>
 </nav>

@@ -72,12 +72,12 @@ class RecipeAddForm(forms.ModelForm):
             InlineCheckboxes('meal_tags'),
             'ingredients',
             'method',
-            Submit('submit', 'zapisz', css_class='btn btn-aubergine')
+            Submit('submit', 'zapisz', css_class='button is-warning')
             )
 
     class Meta:
         model = Recipe
-        fields = ['name', 'portions', 'ingredients', 'method', 'meal_tags']
+        fields = ['name', 'portions', 'meal_tags', 'ingredients', 'method']
 
 
 class RecipeEditForm(RecipeAddForm):

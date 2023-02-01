@@ -10,23 +10,24 @@
     <title>MEAL PREP - {% block title %}{% endblock %}</title>
 
     {% block styles %}
-        <link rel="stylesheet" href="{% static './css/bootstrap.min.css'%}">
+{#        <link rel="stylesheet" href="{% static './css/bootstrap.min.css'%}">#}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
         <link rel="stylesheet" href="{% static './css/styles.css'%}">
     {% endblock %}
 
     {% block scripts %}
-        <script src="{% static './js/bootstrap.min.js' %}" async defer></script>
+{#        <script src="{% static './js/bootstrap.min.js' %}" async defer></script>#}
     {% endblock %}
 </head>
 <body>
 
+    {%  block navbar %}
+        {% include './partials/_menu.html' %}
+    {%  endblock %}
 
-{% include './partials/_menu.html' %}
+    {% block content %}
+    {% endblock %}
 
-<div class="container">
-            {% block content %}
 
-            {% endblock %}
-</div>
 </body>
 </html>

@@ -6,9 +6,20 @@
 {% endblock %}
 
 
+{%  block navbar %}
+    {% if not user.is_authenticated %}
+        <section class="hero is-fullheight" {% if not user.is_authenticated %} id="unregistered_home" {% endif %}>
+        <div class="hero-head mt-4">
+            {% include './partials/_menu.html' %}
+        </div>
+    {% endif %}
+{%  endblock %}
+
+
 {% block content %}
 
     {% if user.is_authenticated %}
+
         <h1 class="mb-5">cześć {{ user.username }}!</h1>
 
         <h3 class="mt-5">dzisiejsze menu:</h3>
@@ -49,9 +60,10 @@
         {% endif %}
 
     {% else %}
-        <h1 class="mb-5 mt-5">łatwy meal prep!</h1>
-        <p>Zaloguj się raz, dwa! >>
-        <a href="{% url 'login' %}">KLIK!</a></p>
-    {% endif %}
 
+        <div class="hero-body"></div>
+        <div class="hero-foot"></div>
+        </section>
+    {% endif %}
 {% endblock %}
+

@@ -4,8 +4,29 @@
     O Aplikacji
 {% endblock %}
 
+{%  block navbar %}
+    {% if not user.is_authenticated %}
+        <section class="hero is-fullheight" {% if not user.is_authenticated %} id="unregistered_home" {% endif %}>
+        <div class="hero-head mt-4">
+            {% include './partials/_menu.html' %}
+        </div>
+    {% endif %}
+{%  endblock %}
+
 {% block content %}
-    <h1>Meal Prep - informacje</h1><br>
-    <p>Ta aplikacja powstała z myślą o tych, którzy chcą codziennie jeść domowy obiad przy minimalnym wysiłku i
-    poświęceniu czasu</p>
+
+    <div class="hero-body">
+
+        <div class="container is-fluid">
+            <div class="box">
+                Ta aplikacja powstała z myślą o tych, którzy chcą codziennie jeść domowy obiad
+                przy minimalnym wysiłku i poświęceniu czasu
+            </div>
+        </div>
+
+    </div>
+    <div class="hero-foot"></div>
+    </section>
+
+
 {% endblock %}

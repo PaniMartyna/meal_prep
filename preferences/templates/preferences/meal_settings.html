@@ -14,8 +14,8 @@
 
     {% if messages %}
         {% for message in messages %}
-        <div class="container-fluid p-0">
-            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <div class="message">
+            <div class="message-body" role="alert">
                 {{ message }}
             </div>
         </div>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="d-grid gap-2 col-3 mt-5">
-        <button type="submit" class="btn btn-warning">zapisz</button>
+        <button type="submit" class="button is-warning">zapisz</button>
     </div>
 
     </form>

@@ -6,5 +6,8 @@
 {% endblock %}
 
 {% block content %}
-    {% crispy form %}
+    <div class="container is-fluid">
+        {{ form|crispy }}
+    <button type="submit" class="button is-warning">zapisz</button>
+    </div>
 {% endblock %}
