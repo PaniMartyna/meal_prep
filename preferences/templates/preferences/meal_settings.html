@@ -36,9 +36,9 @@
             {% for meal in meal_list %}
             <tr>
             <td class="text-center">
-                <input class="form-check-input mt-1" type="checkbox" name="{{ meal.meal_name }}"
-                        {% if meal.meal_selected %} checked {% endif %}></td>
-                <td>{{ meal.meal_name }}</td>
+                <input class="form-check-input mt-1" type="checkbox" name="meals" value="{{ meal.meal.meal_name }}"
+                        {% if meal.meal_selected is True %} checked {% endif %}></td>
+                <td>{{ meal.meal.meal_name }}</td>
 
             </tr>
             {% endfor %}
