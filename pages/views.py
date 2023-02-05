@@ -20,7 +20,7 @@ class HomePageView(views.View):
                     userprofile__user=request.user,
                     userprofilemeals__meal_selected=True
             ).count() == 0:
-                messages.info(request, 'Aby zacząć korzystać z aplikacji, zdefiniuj ustawienia')
+                messages.info(request, 'Aby korzystać z aplikacji, zdefiniuj ustawienia')
                 return redirect(reverse('preferences:user-preferences'))
             else:
                 eaten_list = DayPlan.objects.filter(date=today, is_eaten=True, user=request.user)

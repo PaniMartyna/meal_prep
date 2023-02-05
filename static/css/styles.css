@@ -3,19 +3,91 @@ html, body {
     overflow: hidden;
 }
 
-#unregistered_home {
+body {
     background: black url("/static/images/Main_background_large.jpg") center/cover;
 }
 
-#dark_logo {
-    font-family: "Homemade Apple";
-    font-size: 25px;
+.navbar {
+    background-color: transparent;
 }
 
-#white_logo {
-    font-family: "Homemade Apple";
+.navbar-burger {
     color: white;
-    font-size: 25px;
+}
+
+.navbar-burger:hover {
+    color: #d4af70;
+}
+
+.hero.is-fullheight .hero-body {
+    align-items: flex-start;
+}
+
+.box {
+    opacity: 0.95;
+}
+
+.input:focus, .textarea:focus, .select select:focus, .is-focused.input, .is-focused.textarea, .select select.is-focused, .input:active, .textarea:active, .select select:active, .is-active.input, .is-active.textarea, .select select.is-active {
+  border-color: #f5a462;
+  box-shadow: 0 0 0 0.125em rgb(252, 211, 179);
+}
+
+.is-link.input:focus, .is-link.textarea:focus, .is-link.is-focused.input, .is-link.is-focused.textarea, .is-link.input:active, .is-link.textarea:active, .is-link.is-active.input, .is-link.is-active.textarea {
+  box-shadow: 0 0 0 0.125em rgb(252, 211, 179);
+}
+
+.select.is-link select:focus, .select.is-link select.is-focused, .select.is-link select:active, .select.is-link select.is-active {
+  box-shadow: 0 0 0 0.125em rgb(252, 211, 179);
+}
+
+.button.is-link:focus:not(:active), .button.is-link.is-focused:not(:active) {
+  box-shadow: 0 0 0 0.125em rgb(252, 211, 179);
+}
+
+.button:focus:not(:active), .button.is-focused:not(:active) {
+  box-shadow: 0 0 0 0.125em rgb(252, 211, 179);
+}
+
+/*#unregistered_home {*/
+/*    background: black url("/static/images/Main_background_large.jpg") center/cover;*/
+/*}*/
+
+#dark_logo {
+    font-size: 3rem;
+}
+
+.navbar-item, .navbar-link {
+    color: whitesmoke;
+}
+
+.navbar-item:hover, .navbar-link:hover, a.navbar-item:hover {
+    color: #d4af70;
+}
+
+.navbar-item.is-dropdown {
+    color: #464647;
+}
+
+.navbar-link:not(.is-arrowless)::after {
+  border-color: #d4af70;
+  margin-top: -0.375em;
+  right: 1.125em;
+}
+
+.is-logo {
+    font-size: 3rem;
+}
+
+.is-handwriting {
+    font-family: "Style Script";
+}
+
+.is-header {
+    font-size: 2.5rem;
+}
+
+.is-meal-header {
+
 }
 
 #white_about {
@@ -27,106 +99,3 @@ html, body {
     background: none;
 }
 
-#unregistered_title {
-    font-family: "Homemade Apple";
-    color: white;
-    font-size: 3em;
-}
-
-.btn-aubergine {
-    color: #fff;
-    background-color: #800080ff;
-    border-color:#800080ff;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #73b973;
-    --bs-btn-hover-border-color: #73b973;
-    --bs-btn-active-color:#fff;
-    --bs-btn-active-bg:#800080ff;
-    --bs-btn-active-border-color:#800080ff;
-    --bs-btn-active-shadow:inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #6a6d6e;
-    --bs-btn-disabled-border-color:#6a6d6e;
-}
-
-.bg-aubergine {
-    background-color: rgba(128, 0, 128, 1);
-}
-
-
-.btn-multichoice{
-  margin: 4px;
-  background-color: #c0b8c0;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  overflow: hidden;
-  float: left;
-}
-
-.btn-multichoice label {
-  float: left; line-height: 3.0em;
-  width: 8.0em; height: 3.0em;
-}
-
-.btn-multichoice label span {
-  text-align: center;
-  padding: 3px 0;
-  display: block;
-}
-
-.btn-multichoice-sm label {
-  float: left; line-height: 1.5em;
-  width: 4.0em; height: 2.0em;
-}
-
-.btn-multichoice-sm label span {
-  text-align: center;
-  vertical-align: top;
-  padding: 3px;
-  display: block;
-}
-
-.btn-multichoice label input {
-  position: absolute;
-  display: none;
-  color: #000000 !important;
-}
-/* selects all of the text within the input element and changes the color of the text */
-.btn-multichoice label input + span{color: #000000;}
-
-
-/* This will declare how a selected input will look giving generic properties */
-.btn-multichoice input:checked + span {
-    color: #ffffff;
-    text-shadow: 0 0  6px rgba(0, 0, 0, 0.8);
-}
-
-/*
-This following statements selects each category individually that contains an input element that is a checkbox and is checked (or selected) and chabges the background color of the span element.
-*/
-
-.btn-multichoice input:checked + span{background-color: #800080ff;}
-
-
-.card-aubergine-link {
-    width: 18rem;
-    text-decoration: none;
-    color: black;
-}
-
-
-.card-aubergine-link:hover {
-    color: grey;
-}
-
-
-.card-aubergine-link-active {
-    width: 18rem;
-    text-decoration: none;
-    background-color: #800080ff;
-    color: white;
-}
-
-.card-aubergine-link-active:hover {
-    color: yellow;
-}

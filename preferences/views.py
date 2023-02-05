@@ -19,19 +19,27 @@ class UserPreferencesView(LoginRequiredMixin, views.View):
         })
 
     def post(self, request):
-        selected_meals = request.POST.getlist("meals")
         user = request.user.userprofile
-        all_meals = UserProfileMeals.objects.filter(user_profile=user)
 
         # clean all meals
+        all_meals = UserProfileMeals.objects.filter(user_profile=user)
         for meal in all_meals:
             meal.meal_selected = False
             meal.save()
 
-        #check selected meals
-        for meal_name in selected_meals:
-            meal = UserProfileMeals.objects.get(user_profile=user, meal__meal_name=meal_name)
-            meal.meal_selected = True
-            meal.save()
+        # check selected meals
+        selected_meals = request.POST.getlist("meals")
+        if selected_meals:
+            for meal_name in selected_meals:
+                meal = UserProfileMeals.objects.get(user_profile=user, meal__meal_name=meal_name)
+                meal.meal_selected = True
+                meal.save()
 
-        return redirect(reverse_lazy('home'))
+            return redirect(reverse_lazy('home'))
+
+        else:
+            messages.info(request, 'Aby korzystać z aplikacji, zdefiniuj ustawienia')
+            meal_list = UserProfileMeals.objects.filter(user_profile=user).order_by("id")
+            return render(request, 'preferences/meal_settings.html', {
+                'meal_list': meal_list
+            })

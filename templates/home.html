@@ -6,64 +6,92 @@
 {% endblock %}
 
 
-{%  block navbar %}
-    {% if not user.is_authenticated %}
-        <section class="hero is-fullheight" {% if not user.is_authenticated %} id="unregistered_home" {% endif %}>
-        <div class="hero-head mt-4">
-            {% include './partials/_menu.html' %}
-        </div>
-    {% endif %}
-{%  endblock %}
-
-
 {% block content %}
 
     {% if user.is_authenticated %}
+        
+        <div class="container is-fluid">
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <span class="is-handwriting is-header">plan na dziś</span>
+                    <hr>
+{#                    {% if shopping_list %}#}
+                    <a class="button is-warning is-fullwidth is-rounded text-is-centered mb-5">zakupy</a>
+{#                    {% endif %}#}
+{#                    {% if cooked_list %}#}
+                    <a class="button is-warning is-fullwidth is-rounded text-is-centered">gotowanie</a>
+{#                    {% endif %}#}
+                </div>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <span class="is-handwriting is-header">menu</span>
+                    <hr>
+                    <ul class="list-group list-group-flush">
 
-        <h1 class="mb-5">cześć {{ user.username }}!</h1>
+                    {% for meal in planned_meals %}
 
-        <h3 class="mt-5">dzisiejsze menu:</h3>
-        <ul class="list-group list-group-flush">
+                        <li class="list-group-item is-meal-header">{{ meal.meal_name }}:
+                          {% for item in eaten_list %}
+                          {% if item.meal == meal %}
+                          {{ item.recipe }},
+                          {% endif %}
+                          {% endfor %}
+                        </li><hr>
 
-        {% for meal in planned_meals %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </div>
 
-            <li class="list-group-item"><strong>{{ meal.meal_name }}: </strong>
-              {% for item in eaten_list %}
-              {% if item.meal == meal %}
-              {{ item.recipe }},
-              {% endif %}
-              {% endfor %}</li>
-
-        {% endfor %}
-        </ul>
-
-        {% if cooked_list %}
-        <h3 class="mt-5">dzisiaj gotujesz:</h3>
-        <ul class="list-group list-group-flush">
-            {% for item in cooked_list %}
-             <li class="list-group-item"><a href="{% url 'recipes:show-recipe' idx=item.recipe_id %}" style="color: #404040; text-decoration: none">
-                 {{ item.recipe }}
-             </a></li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <h3 class="mt-5">dzisiaj nie gotujesz!</h3>
-        {% endif %}
-
-        {% if shopping_list %}
-        <h3 class="mt-5">kup dzisiaj:</h3>
-        <ul class="mb-5 mt-2 list-group list-group-flush">
-            {% for product in shopping_list %}
-                  <li class="list-group-item">{{ product }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+{##}
+{#        <h1 class="mb-5">cześć {{ user.username }}!</h1>#}
+{##}
+{#        <h3 class="mt-5">dzisiejsze menu:</h3>#}
+{#        <ul class="list-group list-group-flush">#}
+{##}
+{#        {% for meal in planned_meals %}#}
+{##}
+{#            <li class="list-group-item"><strong>{{ meal.meal_name }}: </strong>#}
+{#              {% for item in eaten_list %}#}
+{#              {% if item.meal == meal %}#}
+{#              {{ item.recipe }},#}
+{#              {% endif %}#}
+{#              {% endfor %}</li>#}
+{##}
+{#        {% endfor %}#}
+{#        </ul>#}
+{##}
+{#        {% if cooked_list %}#}
+{#        <h3 class="mt-5">dzisiaj gotujesz:</h3>#}
+{#        <ul class="list-group list-group-flush">#}
+{#            {% for item in cooked_list %}#}
+{#             <li class="list-group-item"><a href="{% url 'recipes:show-recipe' idx=item.recipe_id %}" style="color: #404040; text-decoration: none">#}
+{#                 {{ item.recipe }}#}
+{#             </a></li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        {% else %}#}
+{#        <h3 class="mt-5">dzisiaj nie gotujesz!</h3>#}
+{#        {% endif %}#}
+{##}
+{#        {% if shopping_list %}#}
+{#        <h3 class="mt-5">kup dzisiaj:</h3>#}
+{#        <ul class="mb-5 mt-2 list-group list-group-flush">#}
+{#            {% for product in shopping_list %}#}
+{#                  <li class="list-group-item">{{ product }}</li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        {% endif %}#}
 
     {% else %}
 
-        <div class="hero-body"></div>
-        <div class="hero-foot"></div>
-        </section>
+{#        <div class="hero-body"></div>#}
+{#        <div class="hero-foot"></div>#}
+{#        </section>#}
     {% endif %}
 {% endblock %}
 

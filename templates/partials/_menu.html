@@ -1,7 +1,6 @@
-<nav class="navbar mb-5" role="navigation" aria-label="main navigation">
+<nav class="navbar is-transparent mt-1 mb-5" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" {% if user.is_authenticated %} id="dark_logo" {% else %} id="white_logo" {% endif %}
-           href="{% url 'home' %}">
+        <a class="navbar-item is-handwriting is-logo" href="{% url 'home' %}">
             meal prep
         </a>
 
@@ -22,7 +21,7 @@
                 <a class="navbar-link" aria-current="page" href="{% url 'recipes:recipe-list' %}">książka kucharska</a>
 
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" aria-current="page" href="{% url 'recipes:add-recipe' %}">dodaj przepis</a>
+                    <a class="navbar-item is-dropdown" aria-current="page" href="{% url 'recipes:add-recipe' %}">dodaj przepis</a>
 
                 </div>
             </div>

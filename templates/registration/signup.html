@@ -6,10 +6,22 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Rejestracja</h2><br>
-    <form method="post">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button type="submit" class="btn btn-aubergine">Zarejestruj się!</button>
-    </form>
+    <div class="hero-body">
+      <div class="container">
+          <div class="columns">
+              <div class="column"></div>
+              <div class="column">
+                <div class="box">
+                    <form method="post">
+                      {% csrf_token %}
+                      {{ form|crispy }}
+                      <button type="submit" class="button is-rounded is-dark is-fullwidth">zarejestruj się!</button>
+                    </form>
+                </div>
+              </div>
+              <div class="column"></div>
+          </div>
+      </div>
+    </div>
+    </section>
 {% endblock %}

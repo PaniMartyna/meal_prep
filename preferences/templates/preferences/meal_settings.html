@@ -6,51 +6,59 @@
     ustawienia
 {% endblock %}
 
-{% block scripts %}
-{#    <script src="{% static './js/checkboxes_script.js' %}" defer></script>#}
-{% endblock %}
 
 {% block content %}
 
+    <div class="container">
     {% if messages %}
         {% for message in messages %}
-        <div class="message">
+        <div class="message is-danger">
             <div class="message-body" role="alert">
                 {{ message }}
             </div>
         </div>
         {% endfor %}
     {% endif %}
+
+
+    <div class="box">
     <h1>wybierz posiłki, które chcesz planować:</h1>
     <p style="color:grey">możesz wybrać dowolną liczbę posiłków.
         Te posiłki pojawią się w Twoim tygodniowym planerze.</p>
+    </div>
+    </div>
 
     <div class="container">
-    <div class="column">
+      <div class="box mt-2">
+        <div class="columns">
+            <form method="post">
+              {% csrf_token %}
 
-    <form method="post">
-        {% csrf_token %}
+                <div class="column-3 mb-3">
+                <table class="table is-striped">
+                    {% for meal in meal_list %}
+                    <tr>
+                    <td class="text-center">
+                        <input class="form-check-input mt-1" type="checkbox" name="meals" value="{{ meal.meal.meal_name }}"
+                                {% if meal.meal_selected is True %} checked {% endif %}></td>
+                        <td>{{ meal.meal.meal_name }}</td>
 
-    <div class="col-3 mt-5">
-        <table class="table table-striped">
-            {% for meal in meal_list %}
-            <tr>
-            <td class="text-center">
-                <input class="form-check-input mt-1" type="checkbox" name="meals" value="{{ meal.meal.meal_name }}"
-                        {% if meal.meal_selected is True %} checked {% endif %}></td>
-                <td>{{ meal.meal.meal_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                </div>
 
-            </tr>
-            {% endfor %}
-        </table>
+
+                <div class="col-3">
+                    <button type="submit" class="button is-rounded is-dark is-fullwidth">zapisz</button>
+                </div>
+
+            </form>
+        </div>
+      </div>
     </div>
 
-    <div class="d-grid gap-2 col-3 mt-5">
-        <button type="submit" class="button is-warning">zapisz</button>
-    </div>
-
-    </form>
-
-    </div>
-    </div>
 {% endblock %}
+
+
+
